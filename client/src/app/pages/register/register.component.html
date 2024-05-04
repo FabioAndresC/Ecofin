@@ -1,0 +1,110 @@
+<div class="flex justify-center items-center h-screen px-16">
+	<div class="w-1/2 flex flex-col items-center gap-4 justify-center">
+		<img src="../assets/logo/logoEcofin.png" alt="logo" class="w-52" />
+		<span class="text-center text-2xl font-sans px-16"
+			>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum
+			maiores eius hic nisi ipsa corporis nam reiciendis velit sapiente
+			esse quae ut distinctio neque veniam accusamus, harum iure quod
+			temporibus!</span
+		>
+	</div>
+	<p-divider layout="vertical" class="h-full"></p-divider>
+	<div class="w-1/2">
+		<h3 class="text-3xl text-center font-semibold py-4">Register</h3>
+
+		<form
+			class="flex flex-col justify-center items-center py-4 gap-4"
+			[formGroup]="formGroup"
+		>
+			<div class="grid grid-cols-1 gap-4">
+				<div class="grid grid-cols-2 gap-4">
+					<div class="flex flex-col gap-1">
+						<label htmlFor="firstName">First name</label>
+						<input
+							type="text"
+							pInputText
+							formControlName="firstName"
+							id="firstName"
+							placeholder="Your first name..."
+						/>
+					</div>
+					<div class="flex flex-col gap-1">
+						<label htmlFor="lastName">Last name</label>
+						<input
+							pInputText
+							id="lastName"
+							formControlName="lastName"
+							placeholder="Your last name..."
+						/>
+					</div>
+				</div>
+
+				<div class="flex flex-col gap-1">
+					<label htmlFor="email">Email</label>
+					<span class="p-input-icon-left">
+						<i class="pi pi-at"></i>
+						<input
+							class="w-full"
+							type="email"
+							pInputText
+							id="email"
+							formControlName="email"
+							placeholder="name@email.com"
+						/>
+					</span>
+				</div>
+				<div class="flex flex-col gap-1">
+					<label htmlFor="userName">UserName</label>
+					<input
+						type="text"
+						pInputText
+						id="userName"
+						formControlName="userName"
+						placeholder="SomeRandomUser555"
+					/>
+				</div>
+				<div class="grid grid-cols-2 gap-4">
+					<div class="flex flex-col gap-1">
+						<label htmlFor="password">Password</label>
+						<span class="p-input-icon-right">
+							<i class="pi pi-eye"></i>
+							<input
+								class="w-full"
+								type="password"
+								pInputText
+								id="password"
+								formControlName="password"
+								placeholder="Type your password..."
+							/>
+						</span>
+					</div>
+					<div class="flex flex-col gap-1">
+						<label htmlFor="confirmPassword"
+							>Confirm Password</label
+						>
+						<span class="p-input-icon-right">
+							<i class="pi pi-eye"></i>
+							<input
+								class="w-full"
+								type="password"
+								pInputText
+								id="confirmPassword"
+								placeholder="One more time..."
+							/>
+						</span>
+					</div>
+				</div>
+			</div>
+			<p-button
+				label="Register"
+				[rounded]="true"
+				[outlined]="true"
+				(onClick)="register()"
+			></p-button>
+			<span
+				>Already have an account?
+				<a class="cursor-pointer text-indigo-600">Login here</a></span
+			>
+		</form>
+	</div>
+</div>
