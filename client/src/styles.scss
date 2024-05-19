@@ -7,8 +7,9 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  background-color: #F1EFED;
+html, body {
+  height: 100%;
+  margin: 0;
 }
 
 /* ANTERIOR PALETA DE COLORES:

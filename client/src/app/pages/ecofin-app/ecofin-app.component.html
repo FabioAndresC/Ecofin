@@ -1,0 +1,91 @@
+<div class="flex flex-row mx-4">
+	<!-- Sidebar -->
+	<div class="h-screen flex items-center">
+		<div
+			class="h-[95vh] w-56 bg-custom-black rounded-xl flex flex-col justify-between p-5"
+		>
+			<!-- Logo -->
+			<div class="flex items-center">
+				<img
+					src="../assets/logo/EcofinIcon.png"
+					alt="logo"
+					class="w-8"
+				/>
+				<span
+					class="text-xl font-medium font-sans tracking-widest text-white ml-2"
+					>Ecofin</span
+				>
+			</div>
+
+			<!-- Sidebar Items -->
+			<div class="flex flex-col gap-4">
+				<div
+					*ngFor="let item of sidebarItems.slice(0, 4)"
+					class="flex gap-2 items-center py-4 px-3 rounded-lg cursor-pointer hover:bg-[#30333A] transition-all duration-300 ease-in-out"
+					[ngClass]="[item.active ? 'bg-[#30333A]' : '']"
+					(click)="selectItem(item)"
+				>
+					<span
+						class="pi"
+						[ngClass]="[
+							item.active
+								? 'text-white transition duration-300 ease-in-out'
+								: 'text-secondary transition duration-300 ease-out',
+							item.icon
+						]"
+					></span>
+					<span
+						class="text-sm ml-1"
+						[ngClass]="[
+							item.active
+								? 'text-white transition duration-300 ease-in-out'
+								: 'text-secondary transition duration-300 ease-out'
+						]"
+						>{{ item.name }}</span
+					>
+				</div>
+			</div>
+			<div class="flex flex-col gap-4">
+				<div class="mx-2 h-px bg-gray-600"></div>
+				<div
+					*ngFor="let item of sidebarItems.slice(4, 6)"
+					class="flex gap-2 items-center py-4 px-3 rounded-lg cursor-pointer hover:bg-[#30333A] transition-all duration-300 ease-in-out"
+					[ngClass]="[item.active ? 'bg-[#30333A]' : '']"
+					(click)="selectItem(item)"
+				>
+					<span
+						class="pi"
+						[ngClass]="[
+							item.active
+								? 'text-white transition duration-300 ease-in-out'
+								: 'text-secondary transition duration-300 ease-out',
+							item.icon
+						]"
+					></span>
+					<span
+						class="text-sm ml-1"
+						[ngClass]="[
+							item.active
+								? 'text-white transition duration-300 ease-in-out'
+								: 'text-secondary transition duration-300 ease-out'
+						]"
+						>{{ item.name }}</span
+					>
+				</div>
+				<!-- Change theme -->
+				<div
+					class="flex items-center justify-center p-2 rounded-lg cursor-pointer hover:bg-[#30333A] transition-all duration-300 ease-in-out"
+				>
+					<span class="text-sm text-secondary">
+						<span class="pi pi-moon"></span>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Content -->
+	<div class="mt-5 mx-8">
+		<router-outlet></router-outlet>
+	</div>
+</div>
