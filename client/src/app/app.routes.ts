@@ -3,6 +3,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { DashboardComponent } from './pages/ecofin-app/dashboard/dashboard.component';
 import { ManageProjectsComponent } from './pages/ecofin-app/manage-projects/manage-projects.component';
 import { EcofinAppComponent } from './pages/ecofin-app/ecofin-app.component';
+import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
 	{
@@ -20,11 +21,16 @@ export const routes: Routes = [
 	{
 		path: 'app',
 		component: EcofinAppComponent,
+		canActivate: [authGuard],
 		children: [
 			{
 				path: 'dashboard',
 				component: DashboardComponent,
 			},
+			{
+				path: 'manage-projects',
+				component: ManageProjectsComponent,
+			}
 		],
 	},
 ];

@@ -1,16 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
 	selector: 'app-ecofin-app',
 	standalone: true,
-	imports: [CommonModule, RouterModule],
+	imports: [CommonModule, RouterModule, InputIconModule, IconFieldModule],
 	templateUrl: './ecofin-app.component.html',
 	styleUrl: './ecofin-app.component.scss',
 })
 export class EcofinAppComponent implements OnInit {
-	constructor(private router: Router) {}
+	constructor(private router: Router, private authService: AuthService) {}
 
 	sidebarItems = [
 		{
@@ -37,7 +40,7 @@ export class EcofinAppComponent implements OnInit {
 			active: false,
 			route: '/app/explore-projects',
 		},
-    {
+		{
 			name: 'Mi perfil',
 			icon: 'pi-user',
 			active: false,
@@ -53,7 +56,6 @@ export class EcofinAppComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.router.navigate(['/app/dashboard']);
-	
 	}
 
 	selectItem(item: any) {
@@ -62,5 +64,16 @@ export class EcofinAppComponent implements OnInit {
 
 		console.log('Navigating to: ', item.route);
 		this.router.navigate([item.route]);
+	}
+
+	async logOut(): Promise<void> {
+		this.authService
+			.signOut()
+			.then(() => {
+				this.router.navigate(['/login']);
+			})
+			.catch((error: any) => {
+				console.error(error);
+			});
 	}
 }

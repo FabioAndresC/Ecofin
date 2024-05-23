@@ -10,6 +10,10 @@ import {
 	ReactiveFormsModule,
 	Validators,
 } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { Route, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
 	selector: 'app-login',
@@ -21,12 +25,20 @@ import {
 		DividerModule,
 		ToggleButtonModule,
 		ReactiveFormsModule,
+		ToastModule,
 	],
+	providers: [MessageService],
 	templateUrl: './login.component.html',
 	styleUrl: './login.component.scss',
 })
 export default class LoginComponent implements OnInit {
 	formGroup: FormGroup = new FormGroup({});
+
+	constructor(
+		private authService: AuthService,
+		private router: Router,
+		private messageService: MessageService
+	) {}
 
 	ngOnInit(): void {
 		this.setForm();
@@ -43,5 +55,32 @@ export default class LoginComponent implements OnInit {
 				Validators.minLength(6),
 			]),
 		});
+	}
+
+	login(): void {
+		this.authService
+			.signIn(this.formGroup.value.email, this.formGroup.value.password)
+			.then((res) => {
+				if (res.error) {
+					this.messageService.add({
+						severity: 'error',
+						summary: 'Error',
+						detail: res.error.message,
+						life: 3000,
+					});
+					return;
+				} else {
+					this.messageService.add({
+						severity: 'success',
+						summary: 'Success',
+						detail: 'Logged in successfully',
+						life: 3000,
+					});
+
+					setTimeout(() => {
+						this.router.navigate(['app/dashboard']);
+					}, 1350);
+				}
+			});
 	}
 }

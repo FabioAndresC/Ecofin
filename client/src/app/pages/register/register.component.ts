@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -38,18 +38,18 @@ export default class RegisterComponent implements OnInit {
 
 	setForm(): void {
 		this.formGroup = new FormGroup({
-			firstName: new FormControl('', [
-				Validators.required,
-				Validators.minLength(3),
-			]),
-			lastName: new FormControl('', [
-				Validators.required,
-				Validators.minLength(3),
-			]),
-			userName: new FormControl('', [
-				Validators.required,
-				Validators.minLength(3),
-			]),
+			// firstName: new FormControl('', [
+			// 	Validators.required,
+			// 	Validators.minLength(3),
+			// ]),
+			// lastName: new FormControl('', [
+			// 	Validators.required,
+			// 	Validators.minLength(3),
+			// ]),
+			// userName: new FormControl('', [
+			// 	Validators.required,
+			// 	Validators.minLength(3),
+			// ]),
 			email: new FormControl('', [Validators.required, Validators.email]),
 			password: new FormControl('', [
 				Validators.required,
@@ -58,17 +58,33 @@ export default class RegisterComponent implements OnInit {
 		});
 	}
 
+	// Using Supabase
 	register(): void {
 		console.log(this.formGroup.value);
-		this.authService.register(this.formGroup.value).subscribe({
-			next: (data: any) => {
-				alert('User created successfully');
+		this.authService
+			.signUp(this.formGroup.value.email, this.formGroup.value.password)
+			.then((data: any) => {
+				console.log(data);
 				this.formGroup.reset();
-				this.router.navigate(['login']);
-			},
-			error: (error: any) => {
+				this.router.navigate(['app/dashboard']);
+			})
+			.catch((error: any) => {
 				console.error(error);
-			},
-		});
+			});
 	}
+
+	//! Using Express.js
+	// register(): void {
+	// 	console.log(this.formGroup.value);
+	// 	this.authService.register(this.formGroup.value).subscribe({
+	// 		next: (data: any) => {
+	// 			alert('User created successfully');
+	// 			this.formGroup.reset();
+	// 			this.router.navigate(['login']);
+	// 		},
+	// 		error: (error: any) => {
+	// 			console.error(error);
+	// 		},
+	// 	});
+	// }
 }

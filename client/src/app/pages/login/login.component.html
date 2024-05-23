@@ -47,8 +47,10 @@
 					</span>
 				</div>
 			</div>
+			<p-toast />
 			<p-button
 				label="Iniciar sesion"
+				(onClick)="login()"
 				[rounded]="true"
 				[outlined]="true"
 			></p-button>
