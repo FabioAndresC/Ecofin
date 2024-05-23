@@ -2,13 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
 	selector: 'app-ecofin-app',
 	standalone: true,
-	imports: [CommonModule, RouterModule, InputIconModule, IconFieldModule],
+	imports: [CommonModule, RouterModule, ButtonModule],
 	templateUrl: './ecofin-app.component.html',
 	styleUrl: './ecofin-app.component.scss',
 })

@@ -1,3 +1,151 @@
-<div class="w-full">
-    hola
+<div class="w-full flex flex-col">
+	<h1 class="text-3xl font-semibold font-sans">> Gestiona tus proyectos</h1>
+
+	<div
+		class="flex flex-col rounded-lg bg-custom-yellow px-4 py-6 w-96 mt-4 shadow-xl"
+	>
+		<!-- Create project card -->
+		<div class="flex justify-between items-center">
+			<span class="text-black text-lg font-medium"
+				>Empieza con un proyecto</span
+			>
+			<p-button
+				label="Crear"
+				severity="secondary"
+				(onClick)="showDialog()"
+			></p-button>
+
+			<p-dialog
+				header="Crear proyecto"
+				[modal]="true"
+				[draggable]="false"
+				[(visible)]="dialogVisible"
+				[style]="{ width: '50rem' }"
+				[breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+			>
+				<form [formGroup]="projectForm" class="flex flex-col gap-8">
+					<div class="flex flex-col gap-2">
+						<label for="project-name">Nombre del proyecto</label>
+						<input
+							pInputText
+							id="project-name"
+							aria-describedby="project-name"
+							formControlName="project_name"
+						/>
+					</div>
+
+					<div class="flex flex-col gap-2">
+						<label for="project-description"
+							>Descripción del proyecto</label
+						>
+						<input
+							pInputText
+							id="project-description"
+							aria-describedby="project-description"
+							formControlName="project_description"
+						/>
+					</div>
+
+					<div class="flex flex-col gap-2">
+						<label for="project_location"
+							>Ubicación del proyecto</label
+						>
+						<p-dropdown
+							formControlName="project_location"
+							[options]="santaCruzProvinces"
+							optionLabel="name"
+                            optionValue="name"
+							placeholder="Selecciona una provincia"
+						/>
+					</div>
+
+					<div class="flex flex-col gap-2 w-full">
+						<label for="required-budget"
+							>Presupuesto requerido</label
+						>
+						<p-inputNumber
+							id="required-budget"
+							inputId="minmaxfraction"
+							mode="decimal"
+							[minFractionDigits]="2"
+							[maxFractionDigits]="2"
+							formControlName="required_budget"
+						/>
+					</div>
+
+					<div class="flex flex-col gap-2">
+						<label for="budged-description"
+							>Presupuesto en detalle</label
+						>
+						<textarea
+							id="budged-description"
+							rows="10"
+							cols="10"
+							formControlName="budget_description"
+						></textarea>
+					</div>
+
+					<div class="flex flex-col gap-2">
+						<label for="infrastructure-type"
+							>Tipo de infraestructura</label
+						>
+						<p-dropdown
+							formControlName="infrastructure_type"
+							[options]="infrastructureTypes"
+							optionLabel="name"
+                            optionValue="name"
+							placeholder="Selecciona un tipo de infraestructura"
+						/>
+					</div>
+
+					<div class="flex flex-col gap-2">
+						<label for="project-risks"
+							>Riesgos asociados al proyecto</label
+						>
+						<p-multiSelect
+							[options]="riesgosProyecto"
+							optionLabel="name"
+                            optionValue="name"
+							placeholder="Selecciona los riesgos asociados al proyecto"
+							formControlName="project_risks"
+						/>
+					</div>
+
+					<div class="flex flex-col gap-2">
+						<label for="project-goals"
+							>Clasificación y metas ODS</label
+						>
+						<p-multiSelect
+							[options]="metasOds"
+							optionLabel="name"
+                            optionValue="name"
+							placeholder="Selecciona las metas ODS"
+							formControlName="project_goals"
+						/>
+					</div>
+				</form>
+
+				<div class="flex justify-end gap-4 mt-16">
+					<p-button
+						label="Cancelar"
+						severity="secondary"
+						(onClick)="hideDialog()"
+					></p-button>
+					<p-button
+						label="Crear"
+						severity="primary"
+						(onClick)="createProject()"
+					></p-button>
+				</div>
+			</p-dialog>
+		</div>
+
+		<!-- <span class="text-black font-bold mt-12 text-6xl">100/100 </span> -->
+		<div class="">
+			<img
+				class="w-56 rounded-xl text-center mt-4"
+				src="https://document360.com/wp-content/uploads/2022/06/create_project_documentation_with_examples.png"
+			/>
+		</div>
+	</div>
 </div>
