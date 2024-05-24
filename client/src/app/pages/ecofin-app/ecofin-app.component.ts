@@ -31,7 +31,7 @@ export class EcofinAppComponent implements OnInit {
 			name: 'Mis donaciones',
 			icon: 'pi-chart-bar',
 			active: false,
-			route: '/app/manage-investments',
+			route: '/app/my-donations',
 		},
 		{
 			name: 'Explorar proyectos',
@@ -43,7 +43,7 @@ export class EcofinAppComponent implements OnInit {
 			name: 'Mi perfil',
 			icon: 'pi-user',
 			active: false,
-			route: '/app/profile',
+			route: '/app/my-profile',
 		},
 		{
 			name: 'Configuración',
@@ -61,7 +61,6 @@ export class EcofinAppComponent implements OnInit {
 		this.sidebarItems.forEach((i) => (i.active = false));
 		item.active = true;
 
-		console.log('Navigating to: ', item.route);
 		this.router.navigate([item.route]);
 	}
 

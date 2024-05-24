@@ -97,4 +97,44 @@ export class ProjectService {
 
 		return data;
 	}
+
+	async uploadProjectImage(file: File): Promise<string> {
+		const fileName = `${Date.now()}_${file.name}`;
+		const { error } = await this.supabaseClient.storage
+			.from('project-images')
+			.upload(fileName, file);
+
+		if (error) {
+			console.error('Error uploading image:', error);
+			throw error;
+		}
+
+		const { data } = this.supabaseClient.storage
+			.from('project-images')
+			.getPublicUrl(fileName);
+
+		if (!data) {
+			console.error('Error getting public URL:');
+			throw new Error('Error getting public URL');
+		}
+
+		return data.publicUrl;
+	}
+
+	async updateAmountRaised(projectId: number, amount: number): Promise<any> {
+		const { data, error } = await this.supabaseClient.rpc(
+			'increment_amount_raised',
+			{
+				p_project_id: projectId,
+				p_amount: amount,
+			}
+		);
+
+		if (error) {
+			console.error('Error updating amount raised:', error);
+			throw error;
+		}
+
+		return data;
+	}
 }

@@ -4,6 +4,9 @@ import { DashboardComponent } from './pages/ecofin-app/dashboard/dashboard.compo
 import { ManageProjectsComponent } from './pages/ecofin-app/manage-projects/manage-projects.component';
 import { EcofinAppComponent } from './pages/ecofin-app/ecofin-app.component';
 import { authGuard } from './auth.guard';
+import { ExploreProjectsComponent } from './pages/ecofin-app/explore-projects/explore-projects.component';
+import { MyDonationsComponent } from './pages/ecofin-app/my-donations/my-donations.component';
+import { ProjectInfoComponent } from './pages/ecofin-app/explore-projects/project-info/project-info.component';
 
 export const routes: Routes = [
 	{
@@ -30,7 +33,23 @@ export const routes: Routes = [
 			{
 				path: 'manage-projects',
 				component: ManageProjectsComponent,
-			}
+			},
+			{
+				path: 'explore-projects',
+				component: ExploreProjectsComponent,
+			},
+			{
+				path: 'my-donations',
+				component: MyDonationsComponent,
+			},
+			{
+				path: 'my-profile',
+				component: MyDonationsComponent,
+			},
+			{
+				path: 'project-details/:id',
+				component: ProjectInfoComponent,
+			},
 		],
 	},
 ];

@@ -1,0 +1,204 @@
+<div class="flex flex-col mt-4">
+	<p-button icon="pi pi-arrow-left" [rounded]="true" [outlined]="true" />
+
+	<p-tabView>
+		<p-tabPanel header="Informacion del proyecto">
+			<h2 class="font-bold text-3xl">{{ project?.project_name }}</h2>
+
+			<div class="flex gap-4">
+				<div class="w-2/3 flex flex-col gap-4">
+					<!-- Imagen del proyecto -->
+					<img
+						class="h-96 w-auto object-none rounded-2xl"
+						[src]="project?.project_image"
+					/>
+
+					<div class="flex">
+						<span class="mr-4"
+							>Fecha de creacion: {{ project?.created_at }}
+						</span>
+						<p-tag
+							*ngFor="let ods of project?.project_goals"
+							[rounded]="true"
+							severity="success"
+							icon="pi pi-check-circle"
+							[value]="ods"
+						></p-tag>
+					</div>
+
+					<div class="flex items-center gap-2">
+						<!-- Ubicacion del proyecto -->
+						<p-tag
+							[rounded]="true"
+							severity="info"
+							icon="pi pi-map-marker"
+							[value]="project?.project_location"
+						></p-tag>
+
+						<!-- Tipo de Infraestructura -->
+						<p-tag
+							[rounded]="true"
+							severity="contrast"
+							icon="pi pi-objects-column"
+							[value]="project?.infrastructure_type"
+						></p-tag>
+					</div>
+
+					<!-- Descripcion del proyecto -->
+					<div class="flex flex-col">
+						<span class="font-bold text-xl">Descripcion</span>
+						<p>{{ project?.project_description }}</p>
+					</div>
+
+					<!-- Descripcion de presupuesto detallado -->
+					<div class="flex flex-col">
+						<span class="font-bold text-xl"
+							>Presupuesto detallado</span
+						>
+						<p>{{ project?.budget_description }}</p>
+					</div>
+				</div>
+
+				<div class="w-1/3">
+					<!-- Donations -->
+					<!-- Progress bar -->
+					<div class="flex flex-col gap-2 mt-4">
+						<span
+							><span class="font-bold text-xl"
+								>Bs. {{ project?.amount_raised }}
+							</span>
+							recaudado de Bs.
+							{{ project?.required_budget }}</span
+						>
+						<p-progressBar
+							[style]="{ height: '10px' }"
+							[value]="
+								project?.amount_raised /
+								project?.required_budget
+							"
+							[showValue]="false"
+						></p-progressBar>
+
+						<!-- Boton para donar -->
+						<p-button
+							label="Donar"
+							icon="pi pi-heart"
+							[rounded]="true"
+							[style]="{ width: '100%' }"
+							(onClick)="showPaymentDialog()"
+						></p-button>
+
+						<p-dialog
+							header="Realizar donacion"
+							[modal]="true"
+							[(visible)]="dialogVisible"
+							[style]="{ width: '35rem' }"
+						>
+							<div
+								class="block mb-5 bg-custom-purple p-2 text-white rounded-lg"
+							>
+								❤ Gracias por tu apoyo!
+							</div>
+							<form
+								[formGroup]="donationForm"
+								class="flex flex-col gap-4"
+							>
+								<div class="flex flex-col gap-2 w-full">
+									<label for="required-budget">Monto</label>
+									<p-inputNumber
+										id="required-budget"
+										inputId="minmaxfraction"
+										mode="currency"
+										currency="BOB"
+										[minFractionDigits]="2"
+										[maxFractionDigits]="2"
+										formControlName="amount"
+									/>
+								</div>
+
+								<div class="flex flex-col gap-1">
+									<label htmlFor="cardNumber"
+										>Numero de tarjeta</label
+									>
+									<p-inputMask
+										[style]="{ width: '100%' }"
+										mask="9999 9999 9999 9999"
+										placeholder="1234 1234 1234"
+									/>
+								</div>
+
+								<div class="flex gap-4">
+									<div class="flex flex-col gap-1">
+										<label htmlFor="cardNumber"
+											>Expiracion</label
+										>
+										<p-inputMask
+											mask="99/99"
+											placeholder="00/00"
+										/>
+									</div>
+
+									<div class="flex flex-col gap-1">
+										<label htmlFor="cardNumber"
+											>Expiracion</label
+										>
+										<p-inputMask
+											mask="999"
+											placeholder="CVC"
+										/>
+									</div>
+								</div>
+								<div class="flex justify-content-end gap-2">
+									<p-button
+										label="Cancelar"
+										severity="secondary"
+										(click)="hidePaymentDialog()"
+									/>
+									<p-button
+										label="Donar"
+										(click)="donate()"
+									/>
+								</div>
+							</form>
+						</p-dialog>
+						<p-toast />
+					</div>
+				</div>
+			</div>
+		</p-tabPanel>
+
+		<!-- Foro -->
+		<p-tabPanel header="Foro">
+			<div>
+				<h2>Foro</h2>
+				<div *ngIf="isCreator">
+					<h3>Crear Nueva Actualización</h3>
+					<!-- Add the FormsModule import -->
+					<input placeholder="Título" [(ngModel)]="newUpdate.title" />
+					<textarea
+						placeholder="Descripción"
+						[(ngModel)]="newUpdate.description"
+					></textarea>
+					<button (click)="createUpdate()">Crear</button>
+				</div>
+
+				<!-- Publicaciones -->
+				<div *ngFor="let update of updates">
+					<h3>{{ update.title }}</h3>
+					<p>{{ update.description }}</p>
+					<h4>Comentarios</h4>
+					<div *ngFor="let comment of update.comments">
+						<p>{{ comment.comment }}</p>
+					</div>
+					<textarea
+						placeholder="Añadir un comentario..."
+						[(ngModel)]="newComment"
+					></textarea>
+					<button (click)="createComment(update.update_id)">
+						Comentar
+					</button>
+				</div>
+			</div>
+		</p-tabPanel>
+	</p-tabView>
+</div>

@@ -16,6 +16,11 @@ import {
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ProjectService } from '../../../services/project.service';
+import {
+	FileUploadEvent,
+	FileUploadModule,
+	UploadEvent,
+} from 'primeng/fileupload';
 
 @Component({
 	selector: 'app-manage-projects',
@@ -32,6 +37,7 @@ import { ProjectService } from '../../../services/project.service';
 		InputNumberModule,
 		InputTextareaModule,
 		MultiSelectModule,
+		FileUploadModule,
 	],
 	templateUrl: './manage-projects.component.html',
 	styleUrl: './manage-projects.component.scss',
@@ -40,6 +46,7 @@ export class ManageProjectsComponent implements OnInit {
 	dialogVisible: boolean = false;
 	projectForm: FormGroup = new FormGroup({});
 	userSession: any;
+	allProjects: any;
 
 	santaCruzProvinces = [
 		{ name: 'Andrés Ibáñez', code: 'SC-01' },
@@ -149,6 +156,18 @@ export class ManageProjectsComponent implements OnInit {
 		await this.getUserProjects();
 	}
 
+	async getUserProjects() {
+		await this.projectService
+			.getProjectByUserId(this.userSession.id)
+			.then((projects) => {
+				this.allProjects = projects;
+			});
+	}
+
+	goToProjectDetails(id: string) {
+		this.router.navigate(['app/project-details/', id]);
+	}
+
 	setupForm(): void {
 		const session = localStorage.getItem('session') as any;
 		this.userSession = JSON.parse(session);
@@ -163,6 +182,8 @@ export class ManageProjectsComponent implements OnInit {
 			project_risks: new FormControl('', Validators.required),
 			project_goals: new FormControl('', Validators.required),
 			user_id: new FormControl(this.userSession.id),
+			project_image: new FormControl(''),
+			created_at: new FormControl(new Date().toISOString()),
 		});
 	}
 
@@ -174,7 +195,15 @@ export class ManageProjectsComponent implements OnInit {
 		this.dialogVisible = false;
 	}
 
-	createProject(): void {
+	onFileSelected(event: any): void {
+		const file: File = event.currentFiles[0];
+		this.projectForm.patchValue({
+			project_image: file,
+		});
+		console.log(event);
+	}
+
+	async createProject(): Promise<void> {
 		if (this.projectForm.invalid) {
 			console.log('Invalid form');
 			return;
@@ -182,16 +211,17 @@ export class ManageProjectsComponent implements OnInit {
 
 		console.log(this.projectForm.value);
 
+		// Update project image url
+		const imageUrl = await this.projectService.uploadProjectImage(
+			this.projectForm.value.project_image
+		);
+		this.projectForm.patchValue({
+			project_image: imageUrl,
+		});
+
 		this.projectService.createProject(this.projectForm.value).then(() => {
 			this.dialogVisible = false;
 		});
-	}
-
-	getUserProjects(): void {
-		this.projectService
-			.getProjectByUserId(this.userSession.id)
-			.then((data) => {
-				console.log(data);
-			});
+		this.getUserProjects();
 	}
 }

@@ -31,7 +31,13 @@ export class AuthService {
 
 				if (session?.user) {
 					this._ngZone.run(() => {
-						this.router.navigate(['/app/dashboard']);
+						if (
+							router
+								.getCurrentNavigation()
+								?.extractedUrl.toString()
+								.includes('/app')
+						)
+							this.router.navigate(['/app/dashboard']);
 					});
 				}
 			}
@@ -40,7 +46,6 @@ export class AuthService {
 
 	get isLoggedIn(): boolean {
 		const session = localStorage.getItem('session') as string;
-		console.log(session === undefined ? false : true);
 		return session === 'undefined' ? false : true;
 	}
 
@@ -54,5 +59,16 @@ export class AuthService {
 
 	async signOut(): Promise<any> {
 		return this.supabaseClient.auth.signOut();
+	}
+
+	async isProjectCreator(userId: string, projectId: number): Promise<boolean> {
+		// Busca el project mediante el projectId y verifica si el userId es igual al user_id del project
+		const { data, error } = await this.supabaseClient
+			.from('projects')
+			.select('user_id')
+			.eq('project_id', projectId)
+			.single();
+
+		return data.user_id === userId;
 	}
 }

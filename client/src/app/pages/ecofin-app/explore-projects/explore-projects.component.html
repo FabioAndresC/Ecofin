@@ -1,0 +1,61 @@
+<div class="flex flex-col gap-4 h-full overflow-y-auto overflow-x-hidden">
+	<div class="flex gap-8 w-full p-4 rounded-lg bg-custom-purple mt-4">
+		<span class="flex flex-col gap-4 text-white">
+			<span class="font-bold text-xl"
+				>Explora la variedad de proyectos de infraestructura sostenible
+				y súmate al cambio
+			</span>
+			<span class="text-slate-200">
+				El mundo necesita un cambio hacia un futuro más verde y
+				sostenible. La infraestructura sostenible juega un papel crucial
+				en este camino.</span
+			>
+		</span>
+		<img
+			class="w-64 rounded-2xl"
+			src="https://archive.smashing.media/assets/344dbf88-fdf9-42bb-adb4-46f01eedd629/de9ee388-c756-449c-84e0-3318aba74f78/open-peeps-opt.png"
+		/>
+	</div>
+
+	<div class="grid lg:grid-cols-3 grid-cols-2 gap-4 cursor-pointer">
+		<!-- Cards for projects -->
+		<div
+			*ngFor="let project of allProjects"
+			class="project-card flex flex-col min-w-52 p-4 shadow-xl rounded-lg border border-red-700 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg"
+			(click)="goToProjectDetails(project.project_id)"
+		>
+			<img
+				class="w-full h-48 object-cover rounded-lg"
+				src="{{ project.project_image }}"
+			/>
+			<div class="flex flex-col mt-4">
+				<span class="font-bold text-base text-custom-purple"
+					>{{ project.project_location }}, SC</span
+				>
+				<span class="font-bold text-base">{{
+					project.project_name
+				}}</span>
+			</div>
+
+			<span class="line-clamp-2 mt-2 text-slate-700 text-sm">{{
+				project.project_description
+			}}</span>
+
+			<!-- Progress bar -->
+			<div class="flex flex-col gap-2 mt-4">
+				<p-progressBar
+					[style]="{ height: '10px' }"
+					[value]="project.amount_raised / project.required_budget"
+					[showValue]="false"
+				></p-progressBar>
+
+				<span
+					><span class="font-bold"
+						>Bs. {{ project.amount_raised }} recaudado</span
+					>
+					de Bs. {{ project.required_budget }}</span
+				>
+			</div>
+		</div>
+	</div>
+</div>
