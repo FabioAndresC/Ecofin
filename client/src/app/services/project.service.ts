@@ -121,9 +121,9 @@ export class ProjectService {
 		return data.publicUrl;
 	}
 
-	async uploadDocument(projectId: number, file: File) {
-		const fileName = `${projectId}/${file.name}`;
-		const { data, error } = await this.supabaseClient.storage
+	async uploadDocument(file: File) {
+		const fileName = `${Date.now()}/${file.name}`;
+		const { error } = await this.supabaseClient.storage
 			.from('project-documents')
 			.upload(fileName, file);
 
@@ -131,10 +131,11 @@ export class ProjectService {
 			throw error;
 		}
 
-		const publicURL: any = this.supabaseClient.storage
+		const { data } = this.supabaseClient.storage
 			.from('project-documents')
 			.getPublicUrl(fileName);
-		return publicURL.publicURL;
+
+		return data.publicUrl;
 	}
 
 	async updateProjectDocumentUrl(projectId: number, documentUrl: string) {

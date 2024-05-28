@@ -204,6 +204,14 @@ export class ManageProjectsComponent implements OnInit {
 		console.log(event);
 	}
 
+	onDocumentSelected(event: any): void {
+		const file: File = event.currentFiles[0];
+		this.projectForm.patchValue({
+			document_url: file,
+		});
+		console.log(event);
+	}
+
 	async createProject(): Promise<void> {
 		if (this.projectForm.invalid) {
 			console.log('Invalid form');
@@ -216,8 +224,17 @@ export class ManageProjectsComponent implements OnInit {
 		const imageUrl = await this.projectService.uploadProjectImage(
 			this.projectForm.value.project_image
 		);
+
+		// Update project pdf url
+		const pdfUrl = await this.projectService.uploadDocument(
+			this.projectForm.value.document_url
+		);
+
+		console.log('Image URL:', pdfUrl);
+
 		this.projectForm.patchValue({
 			project_image: imageUrl,
+			document_url: pdfUrl,
 		});
 
 		this.projectService.createProject(this.projectForm.value).then(() => {
