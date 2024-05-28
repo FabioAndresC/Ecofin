@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Route, Router, RouterModule } from '@angular/router';
 import { ProjectService } from '../../../../services/project.service';
 import { TabViewModule } from 'primeng/tabview';
 import { CommonModule } from '@angular/common';
@@ -24,6 +24,7 @@ import { ToastModule } from 'primeng/toast';
 import { ProjectUpdateService } from '../../../../services/project-updates.service';
 import { UpdateCommentService } from '../../../../services/update-comment.service';
 import { AuthService } from '../../../../services/auth.service';
+import { ProjectActivityService } from '../../../../services/project-activities.service';
 
 @Component({
 	selector: 'app-project-info',
@@ -43,6 +44,7 @@ import { AuthService } from '../../../../services/auth.service';
 		CommonModule,
 		ReactiveFormsModule,
 		FormsModule,
+		RouterModule,
 	],
 	providers: [MessageService],
 	templateUrl: './project-info.component.html',
@@ -61,15 +63,21 @@ export class ProjectInfoComponent implements OnInit {
 	newComment = '';
 	isCreator: boolean = false;
 
+	// Activities methods
+	createActivityDialogVisible: boolean = false;
+	activities: any[] = [];
+	newActivity = { amount_spent: 0, description: '' };
+	totalAmountSpent: number = 0;
+
 	constructor(
 		private route: ActivatedRoute,
-		private router: Router,
 		private projectService: ProjectService,
 		private donationService: DonationService,
 		private messageService: MessageService,
 		private projectUpdateService: ProjectUpdateService,
 		private updateCommentService: UpdateCommentService,
-		private authService: AuthService
+		private authService: AuthService,
+		private projectActivityService: ProjectActivityService
 	) {}
 
 	ngOnInit(): void {
@@ -95,7 +103,11 @@ export class ProjectInfoComponent implements OnInit {
 			console.log(this.project.user_id, this.userSession.id);
 			this.isCreator = this.project.user_id === this.userSession.id;
 
+			// Getting Updates of the project
 			this.loadUpdates();
+
+			// Getting Activities of the project
+			this.getProjectActivities();
 		});
 
 		if (this.project) {
@@ -134,7 +146,59 @@ export class ProjectInfoComponent implements OnInit {
 		this.hidePaymentDialog();
 	}
 
-	// FORO METHODS
+	//! PROJECT ACTIVITIES METHODS
+	showCreateActivityDialog() {
+		this.createActivityDialogVisible = true;
+	}
+	hideCreateActivityDialog() {
+		this.createActivityDialogVisible = false;
+	}
+
+	async getProjectActivities() {
+		try {
+			this.activities =
+				await this.projectActivityService.getActivitiesByProject(
+					this.project.project_id
+				);
+		} catch (error) {
+			console.error('Error fetching project activities:', error);
+		}
+	}
+
+	async addActivity() {
+		// Getting user_profile
+		const userProfile: any = await this.authService.getUserProfile(
+			this.userSession.id
+		);
+		const fullName = userProfile.data[0].full_name;
+
+		// If the amount spent is greater than the amount raised, show an error message
+		if (this.newActivity.amount_spent > this.project.amount_raised) {
+			this.messageService.add({
+				severity: 'error',
+				summary: 'Error',
+				detail: 'El monto gastado es mayor al monto recaudado',
+				life: 3000,
+			});
+			return;
+		}
+
+		try {
+			const newActivity =
+				await this.projectActivityService.createActivity(
+					this.project.project_id,
+					this.userSession.id,
+					fullName,
+					this.newActivity.amount_spent,
+					this.newActivity.description
+				);
+			this.activities.push(newActivity);
+		} catch (error) {
+			console.error('Error creating activity:', error);
+		}
+	}
+
+	//! FORO METHODS
 	showCreateUpdateDialog() {
 		this.createUpdateDialogVisible = true;
 	}
