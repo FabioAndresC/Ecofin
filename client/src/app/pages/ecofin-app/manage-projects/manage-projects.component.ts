@@ -74,10 +74,10 @@ export class ManageProjectsComponent implements OnInit {
 			code: 'INF003',
 		},
 		{ name: 'Abastecimiento de agua y recursos', code: 'INF004' },
-		{
-			name: 'Tratamiento de residuos sólidos y aguas servidas',
-			code: 'INF005',
-		},
+		// {
+		// 	name: 'Tratamiento de residuos sólidos y aguas servidas',
+		// 	code: 'INF005',
+		// },
 		{ name: 'Telecomunicaciones', code: 'INF006' },
 		{ name: 'Generación y transmisión de energía', code: 'INF007' },
 	];
@@ -127,22 +127,22 @@ export class ManageProjectsComponent implements OnInit {
 
 	metasOds = [
 		{ name: 'Fin de la Pobreza', code: 'ODS1' },
-		{ name: 'Hambre Cero', code: 'ODS2' },
-		{ name: 'Salud y Bienestar', code: 'ODS3' },
-		{ name: 'Educación de Calidad', code: 'ODS4' },
-		{ name: 'Igualdad de Género', code: 'ODS5' },
-		{ name: 'Agua Limpia y Saneamiento', code: 'ODS6' },
-		{ name: 'Energía Asequible y No Contaminante', code: 'ODS7' },
-		{ name: 'Trabajo Decente y Crecimiento Económico', code: 'ODS8' },
-		{ name: 'Industria, Innovación e Infraestructura', code: 'ODS9' },
-		{ name: 'Reducción de las Desigualdades', code: 'ODS10' },
+		// { name: 'Hambre Cero', code: 'ODS2' },
+		// { name: 'Salud y Bienestar', code: 'ODS3' },
+		// { name: 'Educación de Calidad', code: 'ODS4' },
+		// { name: 'Igualdad de Género', code: 'ODS5' },
+		// { name: 'Agua Limpia y Saneamiento', code: 'ODS6' },
+		// { name: 'Energía Asequible y No Contaminante', code: 'ODS7' },
+		// { name: 'Trabajo Decente y Crecimiento Económico', code: 'ODS8' },
+		// { name: 'Industria, Innovación e Infraestructura', code: 'ODS9' },
+		// { name: 'Reducción de las Desigualdades', code: 'ODS10' },
 		{ name: 'Ciudades y Comunidades Sostenibles', code: 'ODS11' },
-		{ name: 'Producción y Consumo Responsables', code: 'ODS12' },
-		{ name: 'Acción por el Clima', code: 'ODS13' },
-		{ name: 'Vida Submarina', code: 'ODS14' },
-		{ name: 'Vida de Ecosistemas Terrestres', code: 'ODS15' },
-		{ name: 'Paz, Justicia e Instituciones Sólidas', code: 'ODS16' },
-		{ name: 'Alianzas para Lograr los Objetivos', code: 'ODS17' },
+		// { name: 'Producción y Consumo Responsables', code: 'ODS12' },
+		// { name: 'Acción por el Clima', code: 'ODS13' },
+		// { name: 'Vida Submarina', code: 'ODS14' },
+		// { name: 'Vida de Ecosistemas Terrestres', code: 'ODS15' },
+		// { name: 'Paz, Justicia e Instituciones Sólidas', code: 'ODS16' },
+		// { name: 'Alianzas para Lograr los Objetivos', code: 'ODS17' },
 	];
 
 	constructor(
@@ -175,14 +175,15 @@ export class ManageProjectsComponent implements OnInit {
 		this.projectForm = new FormGroup({
 			project_name: new FormControl('', Validators.required),
 			project_description: new FormControl('', Validators.required),
+			project_image: new FormControl(''),
 			project_location: new FormControl('', Validators.required),
+			infrastructure_type: new FormControl('', Validators.required),
 			required_budget: new FormControl('', Validators.required),
 			budget_description: new FormControl('', Validators.required),
-			infrastructure_type: new FormControl('', Validators.required),
+			document_url: new FormControl(''),
 			project_risks: new FormControl('', Validators.required),
 			project_goals: new FormControl('', Validators.required),
 			user_id: new FormControl(this.userSession.id),
-			project_image: new FormControl(''),
 			created_at: new FormControl(new Date().toISOString()),
 		});
 	}

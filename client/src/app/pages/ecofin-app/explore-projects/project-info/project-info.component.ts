@@ -19,9 +19,11 @@ import {
 } from '@angular/forms';
 import { DonationService } from '../../../../services/donation.service';
 import { MessageService } from 'primeng/api';
+import { EditorModule } from 'primeng/editor';
 import { ToastModule } from 'primeng/toast';
 import { ProjectUpdateService } from '../../../../services/project-updates.service';
 import { UpdateCommentService } from '../../../../services/update-comment.service';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
 	selector: 'app-project-info',
@@ -36,10 +38,11 @@ import { UpdateCommentService } from '../../../../services/update-comment.servic
 		InputTextModule,
 		InputMaskModule,
 		InputNumberModule,
+		EditorModule,
 		ToastModule,
 		CommonModule,
 		ReactiveFormsModule,
-		FormsModule
+		FormsModule,
 	],
 	providers: [MessageService],
 	templateUrl: './project-info.component.html',
@@ -52,6 +55,7 @@ export class ProjectInfoComponent implements OnInit {
 	donationForm: FormGroup = new FormGroup({});
 
 	// Forum methods
+	createUpdateDialogVisible: boolean = false;
 	updates: any[] = [];
 	newUpdate = { title: '', description: '' };
 	newComment = '';
@@ -64,7 +68,8 @@ export class ProjectInfoComponent implements OnInit {
 		private donationService: DonationService,
 		private messageService: MessageService,
 		private projectUpdateService: ProjectUpdateService,
-		private updateCommentService: UpdateCommentService
+		private updateCommentService: UpdateCommentService,
+		private authService: AuthService
 	) {}
 
 	ngOnInit(): void {
@@ -129,7 +134,15 @@ export class ProjectInfoComponent implements OnInit {
 		this.hidePaymentDialog();
 	}
 
-	// Foro methods
+	// FORO METHODS
+	showCreateUpdateDialog() {
+		this.createUpdateDialogVisible = true;
+	}
+
+	hideCreateUpdateDialog() {
+		this.createUpdateDialogVisible = false;
+	}
+
 	async loadUpdates() {
 		this.updates = await this.projectUpdateService.getUpdatesByProject(
 			this.project.project_id
@@ -140,13 +153,21 @@ export class ProjectInfoComponent implements OnInit {
 					update.update_id
 				);
 		}
-		console.log(this.updates);
-		console.log(this.updates[0].comments);
+
+		// Getting the creator of each update
+		let creator: any = await this.authService.getUserProfile(
+			this.project.user_id
+		);
+		creator = creator.data[0].full_name;
+		for (let update of this.updates) {
+			update.creator = creator;
+		}
 	}
 
 	async createUpdate() {
 		await this.projectUpdateService.createUpdate(
 			this.project.project_id,
+			this.userSession.id,
 			this.newUpdate.title,
 			this.newUpdate.description
 		);
@@ -155,9 +176,14 @@ export class ProjectInfoComponent implements OnInit {
 	}
 
 	async createComment(updateId: number) {
+		const userProfile: any = await this.authService.getUserProfile(
+			this.userSession.id
+		);
+
 		await this.updateCommentService.createComment(
 			updateId,
 			this.userSession.id,
+			userProfile.data[0].full_name,
 			this.newComment
 		);
 		this.newComment = '';

@@ -121,6 +121,35 @@ export class ProjectService {
 		return data.publicUrl;
 	}
 
+	async uploadDocument(projectId: number, file: File) {
+		const fileName = `${projectId}/${file.name}`;
+		const { data, error } = await this.supabaseClient.storage
+			.from('project-documents')
+			.upload(fileName, file);
+
+		if (error) {
+			throw error;
+		}
+
+		const publicURL: any = this.supabaseClient.storage
+			.from('project-documents')
+			.getPublicUrl(fileName);
+		return publicURL.publicURL;
+	}
+
+	async updateProjectDocumentUrl(projectId: number, documentUrl: string) {
+		const { data, error } = await this.supabaseClient
+			.from('projects')
+			.update({ project_documents: documentUrl })
+			.eq('project_id', projectId);
+
+		if (error) {
+			throw error;
+		}
+
+		return data;
+	}
+
 	async updateAmountRaised(projectId: number, amount: number): Promise<any> {
 		const { data, error } = await this.supabaseClient.rpc(
 			'increment_amount_raised',

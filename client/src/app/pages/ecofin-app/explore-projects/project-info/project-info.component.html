@@ -169,34 +169,107 @@
 
 		<!-- Foro -->
 		<p-tabPanel header="Foro">
-			<div>
-				<h2>Foro</h2>
-				<div *ngIf="isCreator">
-					<h3>Crear Nueva Actualización</h3>
-					<!-- Add the FormsModule import -->
-					<input placeholder="Título" [(ngModel)]="newUpdate.title" />
-					<textarea
-						placeholder="Descripción"
-						[(ngModel)]="newUpdate.description"
-					></textarea>
-					<button (click)="createUpdate()">Crear</button>
+			<div class="flex flex-col items-center justify-center">
+				<div class="flex gap-8 items-center">
+					<h2>Actualizaciones del proyecto</h2>
+					<div class="" *ngIf="isCreator">
+						<p-button
+							label="Crear publicacion"
+							(onClick)="showCreateUpdateDialog()"
+						></p-button>
+						<p-dialog
+							header="Crear actualizacion"
+							[modal]="true"
+							[(visible)]="createUpdateDialogVisible"
+							[style]="{ width: '45rem' }"
+						>
+							<div class="flex flex-col gap-4">
+								<div class="flex flex-col gap-2">
+									<label for="title">Titulo</label>
+									<input
+										pInputText
+										id="title"
+										aria-describedby="title"
+										[(ngModel)]="newUpdate.title"
+									/>
+								</div>
+								<div class="flex flex-col gap-2">
+									<label for="description">Contenido</label>
+									<p-editor
+										[(ngModel)]="newUpdate.description"
+										[style]="{ height: '200px' }"
+									/>
+								</div>
+							</div>
+
+							<div class="flex justify-end gap-4 mt-8">
+								<p-button
+									label="Cancelar"
+									severity="secondary"
+									(onClick)="hideCreateUpdateDialog()"
+								></p-button>
+								<p-button
+									label="Crear"
+									severity="primary"
+									(onClick)="createUpdate()"
+								></p-button>
+							</div>
+						</p-dialog>
+					</div>
 				</div>
 
 				<!-- Publicaciones -->
-				<div *ngFor="let update of updates">
-					<h3>{{ update.title }}</h3>
-					<p>{{ update.description }}</p>
-					<h4>Comentarios</h4>
-					<div *ngFor="let comment of update.comments">
-						<p>{{ comment.comment }}</p>
+				<div class="flex flex-col gap-8 items-center justify-center">
+					<div
+						*ngFor="let update of updates"
+						class="bg-custom-purple px-16 py-6 rounded-lg flex flex-col gap-2"
+					>
+						<div class="">
+							<!-- Icon user -->
+							<div class="flex items-center gap-4">
+								<img
+									class="h-10 w-10 rounded-full"
+									src="https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
+								/>
+								<span class="text-white">{{
+									update?.creator
+								}}</span>
+							</div>
+						</div>
+
+						<div class="flex flex-col gap-1 ">
+							<div class="text-custom-purple text-center font-semibold text-2xl m-0 bg-white p-2 rounded-lg">
+								{{ update.title }}
+							</div>
+							<div
+								class="ql-editor p-0 opacity-90 font-sans leading-normal text-white mt-4 text-base"
+								[innerHTML]="update.description"
+							></div>
+						</div>
+
+						<!-- Separacion -->
+						<div class="h-0.5 bg-white rounded-lg mt-8"></div>
+
+						<div class="text-xl text-white">Commentarios</div>
+						<div *ngFor="let comment of update?.comments">
+							<div class="flex items-start gap-2">
+								<img
+									class="h-6 w-6 rounded-full"
+									src="https://static.vecteezy.com/system/resources/thumbnails/008/442/086/small_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg"
+								/>
+								<div
+									class="flex flex-col gap-1 p-2 bg-indigo-600 rounded-lg"
+								>
+									<span class="text-white font-semibold">{{
+										comment?.full_name
+									}}</span
+									><span class="text-white">{{
+										comment?.comment
+									}}</span>
+								</div>
+							</div>
+						</div>
 					</div>
-					<textarea
-						placeholder="Añadir un comentario..."
-						[(ngModel)]="newComment"
-					></textarea>
-					<button (click)="createComment(update.update_id)">
-						Comentar
-					</button>
 				</div>
 			</div>
 		</p-tabPanel>

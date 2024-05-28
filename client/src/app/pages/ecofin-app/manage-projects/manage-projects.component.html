@@ -74,6 +74,19 @@
 						/>
 					</div>
 
+					<div class="flex flex-col gap-2">
+						<label for="infrastructure-type"
+							>Tipo de infraestructura</label
+						>
+						<p-dropdown
+							formControlName="infrastructure_type"
+							[options]="infrastructureTypes"
+							optionLabel="name"
+							optionValue="name"
+							placeholder="Selecciona un tipo de infraestructura"
+						/>
+					</div>
+
 					<div class="flex flex-col gap-2 w-full">
 						<label for="required-budget"
 							>Presupuesto requerido</label
@@ -102,15 +115,23 @@
 					</div>
 
 					<div class="flex flex-col gap-2">
-						<label for="infrastructure-type"
-							>Tipo de infraestructura</label
+						<label
+							>Subir documentos
+							<span class="text-slate-600 text-sm"
+								>Para respaldar tu proyecto (Documentacion
+								legal, presupuesto, etc)</span
+							></label
 						>
-						<p-dropdown
-							formControlName="infrastructure_type"
-							[options]="infrastructureTypes"
-							optionLabel="name"
-							optionValue="name"
-							placeholder="Selecciona un tipo de infraestructura"
+						<p-fileUpload
+							mode="advanced"
+							[showUploadButton]="false"
+							chooseLabel="Subir"
+							chooseIcon="pi pi-upload"
+							name="demo[]"
+							url="https://www.primefaces.org/cdn/api/upload.php"
+							accept=".pdf, .doc, .docx, .csv"
+							maxFileSize="1000000"
+							(onSelect)="onFileSelected($event)"
 						/>
 					</div>
 

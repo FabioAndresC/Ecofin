@@ -30,11 +30,21 @@ export class UpdateCommentService {
 	}
 
 	// Crear un nuevo comentario
-	async createComment(updateId: number, userId: string, comment: string) {
+	async createComment(
+		updateId: number,
+		userId: string,
+		fullName: string,
+		comment: string
+	) {
 		const { data, error } = await this.supabase
 			.from('update_comments')
 			.insert([
-				{ update_id: updateId, user_id: userId, comment: comment },
+				{
+					update_id: updateId,
+					user_id: userId,
+					full_name: fullName,
+					comment: comment,
+				},
 			]);
 
 		if (error) {

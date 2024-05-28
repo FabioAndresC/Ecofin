@@ -30,12 +30,18 @@ export class ProjectUpdateService {
 	}
 
 	// Crear una nueva actualización
-	async createUpdate(projectId: number, title: string, description: string) {
+	async createUpdate(
+		projectId: number,
+		creatorId: string,
+		title: string,
+		description: string
+	) {
 		const { data, error } = await this.supabase
 			.from('project_updates')
 			.insert([
 				{
 					project_id: projectId,
+					creator_id: creatorId,
 					title: title,
 					description: description,
 				},
