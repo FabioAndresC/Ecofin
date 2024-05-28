@@ -25,6 +25,7 @@ import { ProjectUpdateService } from '../../../../services/project-updates.servi
 import { UpdateCommentService } from '../../../../services/update-comment.service';
 import { AuthService } from '../../../../services/auth.service';
 import { ProjectActivityService } from '../../../../services/project-activities.service';
+import { AiService } from '../../../../services/ai.service';
 
 @Component({
 	selector: 'app-project-info',
@@ -77,7 +78,8 @@ export class ProjectInfoComponent implements OnInit {
 		private projectUpdateService: ProjectUpdateService,
 		private updateCommentService: UpdateCommentService,
 		private authService: AuthService,
-		private projectActivityService: ProjectActivityService
+		private projectActivityService: ProjectActivityService,
+		private aiService: AiService
 	) {}
 
 	ngOnInit(): void {
@@ -122,6 +124,10 @@ export class ProjectInfoComponent implements OnInit {
 		this.dialogVisible = false;
 	}
 
+	goBack(): void {
+		window.history.back();
+	}
+
 	async donate(): Promise<void> {
 		const projectId = this.project.project_id;
 		const amount = this.donationForm.value.amount;
@@ -160,6 +166,11 @@ export class ProjectInfoComponent implements OnInit {
 				await this.projectActivityService.getActivitiesByProject(
 					this.project.project_id
 				);
+
+			// Calculate total amount spent
+			this.activities.map((value: any) => {
+				this.totalAmountSpent += value.amount_spent;
+			});
 		} catch (error) {
 			console.error('Error fetching project activities:', error);
 		}
@@ -179,6 +190,32 @@ export class ProjectInfoComponent implements OnInit {
 				summary: 'Error',
 				detail: 'El monto gastado es mayor al monto recaudado',
 				life: 3000,
+			});
+			return;
+		}
+
+		let validation: string = await this.aiService.validateActivity(
+			this.project.project_name,
+			this.project.project_description,
+			this.project.amount_spent,
+			this.newActivity.description
+		);
+
+		// Clean validation text
+		validation = validation.replace(/<[^>]*>?/gm, '');
+
+		// Delete the `` from the string
+		validation = validation.replace(/`/g, '');
+
+		// Convert to json
+		const validationObj: any = JSON.parse(validation);
+
+		if (validationObj.value === false) {
+			this.messageService.add({
+				severity: 'error',
+				summary: 'Error',
+				detail: validationObj.explanation,
+				life: 8000,
 			});
 			return;
 		}

@@ -1,5 +1,10 @@
 <div class="flex flex-col mt-4">
-	<p-button icon="pi pi-arrow-left" [rounded]="true" [outlined]="true" />
+	<p-button
+		icon="pi pi-arrow-left"
+		[rounded]="true"
+		[outlined]="true"
+		(onClick)="goBack()"
+	/>
 
 	<p-tabView>
 		<p-tabPanel header="Informacion del proyecto">
@@ -213,63 +218,67 @@
 							<h2 class="text-3xl font-medium m-0">
 								Todas las actividades
 							</h2>
-							<p-button
-								label="Crear actividad"
-								[outlined]="true"
-								[rounded]="true"
-								(onClick)="showCreateActivityDialog()"
-							></p-button>
+							<div *ngIf="isCreator">
+								<p-button
+									label="Crear actividad"
+									[outlined]="true"
+									[rounded]="true"
+									(onClick)="showCreateActivityDialog()"
+								></p-button>
 
-							<p-dialog
-								header="Crear actividad"
-								[modal]="true"
-								[(visible)]="createActivityDialogVisible"
-								[style]="{ width: '45rem' }"
-							>
-								<div class="flex flex-col gap-4">
-									<div class="flex flex-col gap-2">
-										<label for="amount"
-											>Monto gastado</label
-										>
-										<p-inputNumber
-											id="required-budget"
-											inputId="minmaxfraction"
-											mode="currency"
-											currency="BOB"
-											[minFractionDigits]="2"
-											[maxFractionDigits]="2"
-											[(ngModel)]="
-												newActivity.amount_spent
-											"
-										/>
+								<p-dialog
+									header="Crear actividad"
+									[modal]="true"
+									[(visible)]="createActivityDialogVisible"
+									[style]="{ width: '45rem' }"
+								>
+									<div class="flex flex-col gap-4">
+										<div class="flex flex-col gap-2">
+											<label for="amount"
+												>Monto gastado</label
+											>
+											<p-inputNumber
+												id="required-budget"
+												inputId="minmaxfraction"
+												mode="currency"
+												currency="BOB"
+												[minFractionDigits]="2"
+												[maxFractionDigits]="2"
+												[(ngModel)]="
+													newActivity.amount_spent
+												"
+											/>
+										</div>
+										<div class="flex flex-col gap-2">
+											<label for="description"
+												>Descripcion</label
+											>
+											<p-editor
+												[(ngModel)]="
+													newActivity.description
+												"
+												[style]="{ height: '200px' }"
+											/>
+										</div>
 									</div>
-									<div class="flex flex-col gap-2">
-										<label for="description"
-											>Descripcion</label
-										>
-										<p-editor
-											[(ngModel)]="
-												newActivity.description
-											"
-											[style]="{ height: '200px' }"
-										/>
-									</div>
-								</div>
 
-								<div class="flex justify-end gap-4 mt-8">
-									<p-button
-										label="Cancelar"
-										severity="secondary"
-										(onClick)="hideCreateActivityDialog()"
-									></p-button>
-									<p-button
-										label="Crear"
-										severity="primary"
-										(onClick)="addActivity()"
-									></p-button>
-									<p-toast />
-								</div>
-							</p-dialog>
+									<div class="flex justify-end gap-4 mt-8">
+										<p-button
+											label="Cancelar"
+											severity="secondary"
+											(onClick)="
+												hideCreateActivityDialog()
+											"
+										></p-button>
+										<p-button
+											label="Crear"
+											severity="primary"
+											(onClick)="addActivity()"
+										></p-button>
+										<p-toast />
+									</div>
+								</p-dialog>
+							</div>
 						</div>
 						<h3 class="text-xl font-medium">
 							Total gastado

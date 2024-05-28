@@ -23,6 +23,7 @@ import {
 } from 'primeng/fileupload';
 import { OpenAI } from '@langchain/openai';
 import { EditorModule } from 'primeng/editor';
+import { AiService } from '../../../services/ai.service';
 
 @Component({
 	selector: 'app-manage-projects',
@@ -150,7 +151,8 @@ export class ManageProjectsComponent implements OnInit {
 
 	constructor(
 		private router: Router,
-		private projectService: ProjectService
+		private projectService: ProjectService,
+		private aiService: AiService
 	) {}
 
 	async ngOnInit(): Promise<void> {
@@ -246,22 +248,16 @@ export class ManageProjectsComponent implements OnInit {
 		this.getUserProjects();
 	}
 
-	//! USING AI TO GENERATE BUDGET DESCRIPTION
 	async generateBudgetDescription(): Promise<void> {
-		const model = new OpenAI({
-			model: 'gpt-3.5-turbo-instruct', // Defaults to "gpt-3.5-turbo-instruct" if no model provided.
-			temperature: 0.9,
-			apiKey: 'API_KEY', // In Node.js defaults to process.env.OPENAI_API_KEY
-		});
+		const name = this.projectForm.value.project_name;
+		const description = this.projectForm.value.project_description;
+		const infrastructure_type = this.projectForm.value.infrastructure_type;
 
-		const prompt = `Given the following project details, generate a detailed budget description Taking into account the Bolivian currency (BOB):
-		\n\nProject Name: ${this.projectForm.value.project_name}
-		\nProject Description: ${this.projectForm.value.project_description}
-		\nInfrastructure Type: ${this.projectForm.value.infrastructure_type}
-		\n\nJust answer with the budget list, don't explain anything else, and at the end of the budget list, tell me the total budget in BOB. Answer all in Spanish`;
-
-		const res: any = await model.invoke(prompt);
-		console.log(res);
+		const res: any = await this.aiService.generateBudgetDescGoogle(
+			name,
+			description,
+			infrastructure_type
+		);
 
 		// Update value in form and show it on the input
 		this.projectForm.patchValue({

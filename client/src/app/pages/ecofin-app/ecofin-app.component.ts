@@ -15,12 +15,12 @@ export class EcofinAppComponent implements OnInit {
 	constructor(private router: Router, private authService: AuthService) {}
 
 	sidebarItems = [
-		{
-			name: 'Dashboard',
-			icon: 'pi-home',
-			active: true,
-			route: '/app/dashboard',
-		},
+		// {
+		// 	name: 'Dashboard',
+		// 	icon: 'pi-home',
+		// 	active: true,
+		// 	route: '/app/dashboard',
+		// },
 		{
 			name: 'Mis proyectos',
 			icon: 'pi-briefcase',
@@ -45,16 +45,10 @@ export class EcofinAppComponent implements OnInit {
 			active: false,
 			route: '/app/my-profile',
 		},
-		{
-			name: 'Configuración',
-			icon: 'pi-cog',
-			active: false,
-			route: '/app/settings',
-		},
 	];
 
 	ngOnInit(): void {
-		this.router.navigate(['/app/dashboard']);
+		this.selectItem(this.sidebarItems[0]);
 	}
 
 	selectItem(item: any) {
