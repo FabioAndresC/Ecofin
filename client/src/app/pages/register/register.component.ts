@@ -38,14 +38,14 @@ export default class RegisterComponent implements OnInit {
 
 	setForm(): void {
 		this.formGroup = new FormGroup({
-			// firstName: new FormControl('', [
-			// 	Validators.required,
-			// 	Validators.minLength(3),
-			// ]),
-			// lastName: new FormControl('', [
-			// 	Validators.required,
-			// 	Validators.minLength(3),
-			// ]),
+			firstName: new FormControl('', [
+				Validators.required,
+				Validators.minLength(3),
+			]),
+			lastName: new FormControl('', [
+				Validators.required,
+				Validators.minLength(3),
+			]),
 			// userName: new FormControl('', [
 			// 	Validators.required,
 			// 	Validators.minLength(3),
@@ -61,12 +61,22 @@ export default class RegisterComponent implements OnInit {
 	// Using Supabase
 	register(): void {
 		console.log(this.formGroup.value);
+		const fullName = `${this.formGroup.value.firstName} ${this.formGroup.value.lastName}`;
+
+		if (this.formGroup.invalid) {
+			return;
+		}
+
 		this.authService
-			.signUp(this.formGroup.value.email, this.formGroup.value.password)
+			.signUp(
+				fullName,
+				this.formGroup.value.email,
+				this.formGroup.value.password
+			)
 			.then((data: any) => {
 				console.log(data);
 				this.formGroup.reset();
-				this.router.navigate(['app/dashboard']);
+				this.router.navigate(['/login']);
 			})
 			.catch((error: any) => {
 				console.error(error);

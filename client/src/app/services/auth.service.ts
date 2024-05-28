@@ -49,8 +49,47 @@ export class AuthService {
 		return session === 'undefined' ? false : true;
 	}
 
-	async signUp(email: string, password: string): Promise<any> {
-		return this.supabaseClient.auth.signUp({ email, password });
+	async signUp(
+		full_name: string,
+		email: string,
+		password: string
+	): Promise<any> {
+		const { data, error } = await this.supabaseClient.auth.signUp({
+			email,
+			password,
+		});
+
+		console.log('user', data);
+
+		if (error) {
+			throw error;
+		}
+
+		await this.createUserProfile(data.user.id, full_name);
+
+		return data;
+	}
+
+	private async createUserProfile(userId: string, fullName: string) {
+		console.log('userId', userId, 'fullName', fullName);
+		const { data, error } = await this.supabaseClient
+			.from('user_profiles')
+			.insert([{ id: userId, full_name: fullName }]);
+
+		console.log('data', data, 'error', error);
+
+		if (error) {
+			throw error;
+		}
+
+		return data;
+	}
+
+	getUserProfile(userId: string): Observable<any> {
+		return this.supabaseClient
+			.from('user_profiles')
+			.select('*')
+			.eq('id', userId);
 	}
 
 	async signIn(email: string, password: string): Promise<any> {
@@ -61,7 +100,10 @@ export class AuthService {
 		return this.supabaseClient.auth.signOut();
 	}
 
-	async isProjectCreator(userId: string, projectId: number): Promise<boolean> {
+	async isProjectCreator(
+		userId: string,
+		projectId: number
+	): Promise<boolean> {
 		// Busca el project mediante el projectId y verifica si el userId es igual al user_id del project
 		const { data, error } = await this.supabaseClient
 			.from('projects')
