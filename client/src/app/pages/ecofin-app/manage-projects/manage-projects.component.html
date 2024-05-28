@@ -87,6 +87,24 @@
 						/>
 					</div>
 
+					<div class="flex flex-col gap-2">
+						<label class="flex items-center gap-4"
+							><span>Presupuesto en detalle</span>
+							<p-button
+								label="Generar con AI ✨"
+								[outlined]="true"
+								[rounded]="true"
+								(onClick)="generateBudgetDescription()"
+							></p-button
+						></label>
+						<textarea
+							id="budged-description"
+							rows="10"
+							cols="10"
+							formControlName="budget_description"
+						></textarea>
+					</div>
+
 					<div class="flex flex-col gap-2 w-full">
 						<label for="required-budget"
 							>Presupuesto requerido</label
@@ -100,18 +118,6 @@
 							[maxFractionDigits]="2"
 							formControlName="required_budget"
 						/>
-					</div>
-
-					<div class="flex flex-col gap-2">
-						<label for="budged-description"
-							>Presupuesto en detalle</label
-						>
-						<textarea
-							id="budged-description"
-							rows="10"
-							cols="10"
-							formControlName="budget_description"
-						></textarea>
 					</div>
 
 					<div class="flex flex-col gap-2">
