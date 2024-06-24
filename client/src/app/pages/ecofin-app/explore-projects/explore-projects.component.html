@@ -45,7 +45,7 @@
 			<div class="flex flex-col gap-2 mt-4">
 				<p-progressBar
 					[style]="{ height: '10px' }"
-					[value]="project.amount_raised / project.required_budget"
+					[value]="(project.amount_raised / project.required_budget) * 100"
 					[showValue]="false"
 				></p-progressBar>
 

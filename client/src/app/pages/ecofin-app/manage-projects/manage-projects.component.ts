@@ -24,6 +24,10 @@ import {
 import { OpenAI } from '@langchain/openai';
 import { EditorModule } from 'primeng/editor';
 import { AiService } from '../../../services/ai.service';
+import { SpeedDialModule } from 'primeng/speeddial';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { WebScrapingService } from '../../../services/web-scraping.service';
 
 @Component({
 	selector: 'app-manage-projects',
@@ -42,7 +46,10 @@ import { AiService } from '../../../services/ai.service';
 		MultiSelectModule,
 		FileUploadModule,
 		EditorModule,
+		SpeedDialModule,
+		ToastModule,
 	],
+	providers: [MessageService],
 	templateUrl: './manage-projects.component.html',
 	styleUrl: './manage-projects.component.scss',
 })
@@ -51,6 +58,8 @@ export class ManageProjectsComponent implements OnInit {
 	projectForm: FormGroup = new FormGroup({});
 	userSession: any;
 	allProjects: any;
+
+	manageProjectId: number = 0;
 
 	santaCruzProvinces = [
 		{ name: 'Andrés Ibáñez', code: 'SC-01' },
@@ -129,8 +138,8 @@ export class ManageProjectsComponent implements OnInit {
 		},
 	];
 
-	metasOds = [
-		{ name: 'Fin de la Pobreza', code: 'ODS1' },
+	metasOds: any = [
+		// { name: 'Fin de la Pobreza', code: 'ODS1' },
 		// { name: 'Hambre Cero', code: 'ODS2' },
 		// { name: 'Salud y Bienestar', code: 'ODS3' },
 		// { name: 'Educación de Calidad', code: 'ODS4' },
@@ -140,7 +149,7 @@ export class ManageProjectsComponent implements OnInit {
 		// { name: 'Trabajo Decente y Crecimiento Económico', code: 'ODS8' },
 		// { name: 'Industria, Innovación e Infraestructura', code: 'ODS9' },
 		// { name: 'Reducción de las Desigualdades', code: 'ODS10' },
-		{ name: 'Ciudades y Comunidades Sostenibles', code: 'ODS11' },
+		// { name: 'Ciudades y Comunidades Sostenibles', code: 'ODS11' },
 		// { name: 'Producción y Consumo Responsables', code: 'ODS12' },
 		// { name: 'Acción por el Clima', code: 'ODS13' },
 		// { name: 'Vida Submarina', code: 'ODS14' },
@@ -149,16 +158,64 @@ export class ManageProjectsComponent implements OnInit {
 		// { name: 'Alianzas para Lograr los Objetivos', code: 'ODS17' },
 	];
 
+	speedDialActions = [
+		{
+			icon: 'pi pi-eye',
+			tooltip: 'Ver proyecto',
+			command: () => {
+				this.router.navigate([
+					'app/project-details/',
+					this.manageProjectId,
+				]);
+			},
+		},
+		{
+			icon: 'pi pi-trash',
+			tooltip: 'Eliminar proyecto',
+			command: () => {
+				this.deleteProject();
+			},
+		},
+	];
+
 	constructor(
 		private router: Router,
 		private projectService: ProjectService,
-		private aiService: AiService
+		private aiService: AiService,
+		private messageService: MessageService,
+		private webScrapingService: WebScrapingService
 	) {}
 
 	async ngOnInit(): Promise<void> {
 		this.setupForm();
 
+		// Load ODS from web scraping
+		await this.webScraping();
+
 		await this.getUserProjects();
+	}
+
+	async webScraping(): Promise<void> {
+		this.webScrapingService.updateOdsGoals();
+		this.webScrapingService.getOdsGoals().then((data) => {
+			data.forEach((item: any) => {
+				this.metasOds.push({
+					name: item.objetivo,
+					code: item.id,
+				});
+			});
+
+			// Sort metasOds array by code
+			this.metasOds.sort((a: any, b: any) => {
+				if (a.code < b.code) {
+					return -1;
+				}
+				if (a.code > b.code) {
+					return 1;
+				}
+				return 0;
+			});
+		});
 	}
 
 	async getUserProjects() {
@@ -219,7 +276,12 @@ export class ManageProjectsComponent implements OnInit {
 
 	async createProject(): Promise<void> {
 		if (this.projectForm.invalid) {
-			console.log('Invalid form');
+			this.messageService.add({
+				severity: 'error',
+				summary: 'Error',
+				detail: 'Por favor, complete todos los campos',
+				life: 3000,
+			});
 			return;
 		}
 
@@ -242,10 +304,48 @@ export class ManageProjectsComponent implements OnInit {
 			document_url: pdfUrl,
 		});
 
-		this.projectService.createProject(this.projectForm.value).then(() => {
-			this.dialogVisible = false;
-		});
-		this.getUserProjects();
+		this.projectService
+			.createProject(this.projectForm.value)
+			.then(() => {
+				this.dialogVisible = false;
+			})
+			.then(() => {
+				this.messageService.add({
+					severity: 'success',
+					summary: 'Proyecto creado',
+					detail: 'El proyecto ha sido creado correctamente',
+					life: 3000,
+				});
+				this.getUserProjects();
+			});
+	}
+
+	async deleteProject(): Promise<void> {
+		try {
+			await this.projectService
+				.deleteProject(this.manageProjectId)
+				.then(() => {
+					this.messageService.add({
+						severity: 'success',
+						summary: 'Proyecto eliminado',
+						detail: 'El proyecto ha sido eliminado correctamente',
+						life: 3000,
+					});
+
+					this.getUserProjects();
+				});
+		} catch (error) {
+			this.messageService.add({
+				severity: 'error',
+				summary: 'Error',
+				detail: 'El proyecto no pudo ser eliminado porque tiene actividades asociadas',
+				life: 3000,
+			});
+		}
+	}
+
+	onSpeedDialAction(action: any, projectId: number): void {
+		this.manageProjectId = projectId;
 	}
 
 	async generateBudgetDescription(): Promise<void> {

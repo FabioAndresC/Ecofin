@@ -2,7 +2,7 @@
 	<h1 class="text-3xl font-semibold font-sans">> Gestiona tus proyectos</h1>
 
 	<div
-		class="flex flex-col rounded-lg bg-custom-yellow px-4 py-6 w-96 mt-4 shadow-xl"
+		class="flex flex-col rounded-lg bg-custom-yellow px-4 py-6 w-[340px] mt-4 shadow-xl"
 	>
 		<!-- Create project card -->
 		<div class="flex justify-between items-center">
@@ -194,18 +194,32 @@
 		</div> -->
 	</div>
 
+	<!-- Message service -->
+	<p-toast />
+
 	<div class="flex flex-col gap-4 h-full overflow-y-auto overflow-x-hidden">
 		<div class="grid lg:grid-cols-3 grid-cols-2 gap-4 cursor-pointer">
 			<!-- Cards for projects -->
+			@for (project of allProjects; track $index) {
 			<div
-				*ngFor="let project of allProjects"
-				class="project-card flex flex-col min-w-52 p-4 shadow-xl rounded-lg border border-red-700 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg"
-				(click)="goToProjectDetails(project.project_id)"
+				class="relative project-card flex flex-col min-w-52 p-4 shadow-xl rounded-lg border border-red-700 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg"
 			>
+				<p-speedDial
+					[model]="speedDialActions"
+					direction="down"
+					transitionDelay="80"
+					showIcon="pi pi-ellipsis-h"
+					hideIcon="pi pi-times"
+					buttonClassName="p-button"
+					class="absolute right-10"
+					(onShow)="onSpeedDialAction($event, project.project_id)"
+				/>
 				<img
 					class="w-full h-48 object-cover rounded-lg"
 					src="{{ project.project_image }}"
+					(click)="goToProjectDetails(project.project_id)"
 				/>
+
 				<div class="flex flex-col mt-4">
 					<span class="font-bold text-base text-custom-purple"
 						>{{ project.project_location }}, SC</span
@@ -224,7 +238,8 @@
 					<p-progressBar
 						[style]="{ height: '10px' }"
 						[value]="
-							project.amount_raised / project.required_budget
+							(project.amount_raised / project.required_budget) *
+							100
 						"
 						[showValue]="false"
 					></p-progressBar>
@@ -237,6 +252,7 @@
 					>
 				</div>
 			</div>
+			}
 		</div>
 	</div>
 </div>

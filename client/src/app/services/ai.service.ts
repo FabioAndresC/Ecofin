@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { OpenAI } from '@langchain/openai';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 import { HarmBlockThreshold, HarmCategory } from '@google/generative-ai';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
 	providedIn: 'root',
@@ -49,7 +50,7 @@ export class AiService {
 		const model = new ChatGoogleGenerativeAI({
 			model: 'gemini-1.0-pro',
 			maxOutputTokens: 2048,
-			apiKey: 'api-key',
+			apiKey: environment.geminiApiKey,
 		});
 
 		const prompt = this.getValidationPrompt(
@@ -74,7 +75,7 @@ export class AiService {
 		const model = new OpenAI({
 			model: 'gpt-3.5-turbo-instruct', // Defaults to "gpt-3.5-turbo-instruct" if no model provided.
 			temperature: 0.9,
-			apiKey: 'api-key', // In Node.js defaults to process.env.OPENAI_API_KEY
+			apiKey: environment.geminiApiKey, // In Node.js defaults to process.env.OPENAI_API_KEY
 		});
 
 		const prompt = this.getDescriptionPrompt(
@@ -94,7 +95,7 @@ export class AiService {
 		const model = new ChatGoogleGenerativeAI({
 			model: 'gemini-1.0-pro',
 			maxOutputTokens: 2048,
-			apiKey: 'api-key',
+			apiKey: environment.geminiApiKey,
 		});
 
 		const prompt = this.getDescriptionPrompt(
