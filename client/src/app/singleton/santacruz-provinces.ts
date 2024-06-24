@@ -1,0 +1,17 @@
+export const SantaCruzProvinces = [
+	{ name: 'Andrés Ibáñez', code: 'SC-01' },
+	{ name: 'Ángel Sandóval', code: 'SC-02' },
+	{ name: 'Chiquitos', code: 'SC-03' },
+	{ name: 'Cordillera', code: 'SC-04' },
+	{ name: 'Florida', code: 'SC-05' },
+	{ name: 'Germán Busch', code: 'SC-06' },
+	{ name: 'Guarayos', code: 'SC-07' },
+	{ name: 'Ichilo', code: 'SC-08' },
+	{ name: 'Manuel M. Caballero', code: 'SC-09' },
+	{ name: 'Ñuflo de Chávez', code: 'SC-10' },
+	{ name: 'Obispo Santiestevan', code: 'SC-11' },
+	{ name: 'Sara', code: 'SC-12' },
+	{ name: 'Vallegrande', code: 'SC-13' },
+	{ name: 'Velasco', code: 'SC-14' },
+	{ name: 'Warnes', code: 'SC-15' },
+];
