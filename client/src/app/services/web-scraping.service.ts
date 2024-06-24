@@ -18,6 +18,8 @@ export class WebScrapingService {
 		);
 	}
 
+	// PATRON: PROTECCIÓN DE VARIACIONES
+	// Al usar Any, estamos protegiendo el sistema de variaciones en el tipo de datos que se pueden recibir
 	scrapeWebsite(url: string): Observable<any> {
 		return this.http.get<any>(
 			`http://localhost:3000/scrape?url=${encodeURIComponent(url)}`

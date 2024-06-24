@@ -11,6 +11,7 @@ import { ButtonModule } from 'primeng/button';
 	styleUrl: './home.component.scss',
 })
 export class HomeComponent {
+	// PATRÓN CREADOR PARA CREAR INSTANCIAS DE LA CLASE ROUTER
 	constructor(private router: Router) {}
 
 	goToSignIn(): void {

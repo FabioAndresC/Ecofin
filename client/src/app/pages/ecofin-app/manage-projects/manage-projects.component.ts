@@ -178,6 +178,7 @@ export class ManageProjectsComponent implements OnInit {
 		},
 	];
 
+	// CREACION DE INSTANCIAS USANDO EL PATRÓN CREADOR
 	constructor(
 		private router: Router,
 		private projectService: ProjectService,
