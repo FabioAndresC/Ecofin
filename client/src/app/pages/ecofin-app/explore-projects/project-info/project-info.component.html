@@ -8,22 +8,72 @@
 
 	<p-tabView>
 		<p-tabPanel header="Informacion del proyecto">
-			<h2 class="font-bold text-3xl">{{ project?.project_name }}</h2>
+			<div class="flex flex-row justify-between">
+				<h2 class="font-bold text-3xl">{{ project.project_name }}</h2>
+				@if (projectAlreadyReported) {
+				<p-tag
+					[rounded]="true"
+					severity="danger"
+					icon="pi pi-exclamation-triangle"
+					value="Reportado"
+				></p-tag>
+				} @else {
+				<p-button
+					label="Reportar"
+					severity="danger"
+					(onClick)="onShowReportDialog()"
+				></p-button>
+				<p-dialog
+					header="Reportar proyecto"
+					[modal]="true"
+					[(visible)]="showReportDialog"
+					[style]="{ width: '35rem' }"
+				>
+					<div
+						class="block mb-5 bg-custom-purple p-2 text-white rounded-lg"
+					>
+						Explicanos los motivos...
+					</div>
+					<div class="flex flex-col gap-2 w-full">
+						<div class="flex flex-col gap-2">
+							<label for="project-name">Motivo</label>
+							<input
+								pInputText
+								id="project-name"
+								aria-describedby="project-name"
+								[(ngModel)]="reasonForReport"
+							/>
+						</div>
 
+						<div class="flex justify-content-end gap-2">
+							<p-button
+								label="Cancelar"
+								severity="secondary"
+								(click)="onHideReportDialog()"
+							/>
+							<p-button
+								label="Reportar"
+								(click)="onReportProject()"
+							/>
+						</div>
+					</div>
+				</p-dialog>
+				}
+			</div>
 			<div class="flex gap-4">
 				<div class="w-2/3 flex flex-col gap-4">
 					<!-- Imagen del proyecto -->
 					<img
 						class="h-96 w-auto object-none rounded-2xl"
-						[src]="project?.project_image"
+						[src]="project.project_image"
 					/>
 
 					<div class="flex">
 						<span class="mr-4"
-							>Fecha de creacion: {{ project?.created_at }}
+							>Fecha de creacion: {{ project.created_at }}
 						</span>
 						<p-tag
-							*ngFor="let ods of project?.project_goals"
+							*ngFor="let ods of project.project_goals"
 							[rounded]="true"
 							severity="success"
 							icon="pi pi-check-circle"
@@ -37,7 +87,7 @@
 							[rounded]="true"
 							severity="info"
 							icon="pi pi-map-marker"
-							[value]="project?.project_location"
+							[value]="project.project_location"
 						></p-tag>
 
 						<!-- Tipo de Infraestructura -->
@@ -45,14 +95,14 @@
 							[rounded]="true"
 							severity="contrast"
 							icon="pi pi-objects-column"
-							[value]="project?.infrastructure_type"
+							[value]="project.infrastructure_type"
 						></p-tag>
 					</div>
 
 					<!-- Descripcion del proyecto -->
 					<div class="flex flex-col">
 						<span class="font-bold text-xl">Descripcion</span>
-						<p>{{ project?.project_description }}</p>
+						<p>{{ project.project_description }}</p>
 					</div>
 
 					<!-- Descripcion de presupuesto detallado -->
@@ -60,7 +110,7 @@
 						<span class="font-bold text-xl"
 							>Presupuesto detallado</span
 						>
-						<p>{{ project?.budget_description }}</p>
+						<p>{{ project.budget_description }}</p>
 					</div>
 
 					<!-- Documentos -->
@@ -74,7 +124,7 @@
 								size="large"
 							/>
 							<a
-								href="{{ project?.document_url }}"
+								href="{{ project.document_url }}"
 								target="_blank"
 								class="text-custom-purple"
 								>Ver documento</a
@@ -89,16 +139,16 @@
 					<div class="flex flex-col gap-2 mt-4">
 						<span
 							><span class="font-bold text-xl"
-								>Bs. {{ project?.amount_raised }}
+								>Bs. {{ project.amount_raised }}
 							</span>
 							recaudado de Bs.
-							{{ project?.required_budget }}</span
+							{{ project.required_budget }}</span
 						>
 						<p-progressBar
 							[style]="{ height: '10px' }"
 							[value]="
-								project?.amount_raised /
-								project?.required_budget
+								project.amount_raised /
+								project.required_budget
 							"
 							[showValue]="false"
 						></p-progressBar>
@@ -207,7 +257,7 @@
 							></p-tag>
 						</div>
 						<span class="text-black font-bold mt-8 text-5xl"
-							>+{{ project?.amount_raised }} Bs.</span
+							>+{{ project.amount_raised }} Bs.</span
 						>
 					</div>
 				</div>
@@ -287,10 +337,8 @@
 							>
 						</h3>
 
-						<div
-							*ngFor="let activity of activities"
-							class="flex gap-2"
-						>
+						@for (activity of activities; track $index) {
+						<div class="flex gap-2">
 							<div
 								class="flex flex-col gap-2 bg-indigo-600 rounded-md p-4 lg:min-w-[500px]"
 							>
@@ -323,6 +371,7 @@
 								</div>
 							</div>
 						</div>
+						}
 					</div>
 				</div>
 			</div>
@@ -381,8 +430,8 @@
 
 				<!-- Publicaciones -->
 				<div class="flex flex-col gap-8 items-center justify-center">
+					@for (update of updates; track $index) {
 					<div
-						*ngFor="let update of updates"
 						class="bg-custom-purple px-16 py-6 rounded-lg flex flex-col gap-2"
 					>
 						<div class="">
@@ -414,7 +463,8 @@
 						<div class="h-0.5 bg-white rounded-lg mt-8"></div>
 
 						<div class="text-xl text-white">Commentarios</div>
-						<div *ngFor="let comment of update?.comments">
+						@for (comment of update?.comments; track $index) {
+						<div>
 							<div class="flex items-start gap-2">
 								<img
 									class="h-6 w-6 rounded-full"
@@ -432,6 +482,7 @@
 								</div>
 							</div>
 						</div>
+						}
 
 						<div>
 							<div class="flex gap-2">
@@ -447,6 +498,7 @@
 							</div>
 						</div>
 					</div>
+					}
 				</div>
 			</div>
 		</p-tabPanel>

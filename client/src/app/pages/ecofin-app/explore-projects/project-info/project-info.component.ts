@@ -26,6 +26,8 @@ import { UpdateCommentService } from '../../../../services/update-comment.servic
 import { AuthService } from '../../../../services/auth.service';
 import { ProjectActivityService } from '../../../../services/project-activities.service';
 import { AiService } from '../../../../services/ai.service';
+import { ProjectReportService } from '../../../../services/project-reports.service';
+import { Project } from '../../../../models/project';
 
 @Component({
 	selector: 'app-project-info',
@@ -52,7 +54,7 @@ import { AiService } from '../../../../services/ai.service';
 	styleUrl: './project-info.component.scss',
 })
 export class ProjectInfoComponent implements OnInit {
-	project: any;
+	project: Project = {} as Project;
 	dialogVisible: boolean = false;
 	userSession: any;
 	donationForm: FormGroup = new FormGroup({});
@@ -70,6 +72,10 @@ export class ProjectInfoComponent implements OnInit {
 	newActivity = { amount_spent: 0, description: '' };
 	totalAmountSpent: number = 0;
 
+	showReportDialog: boolean = false;
+	reasonForReport: string = '';
+	projectAlreadyReported: boolean = false;
+
 	constructor(
 		private route: ActivatedRoute,
 		private projectService: ProjectService,
@@ -79,7 +85,8 @@ export class ProjectInfoComponent implements OnInit {
 		private updateCommentService: UpdateCommentService,
 		private authService: AuthService,
 		private projectActivityService: ProjectActivityService,
-		private aiService: AiService
+		private aiService: AiService,
+		private projectReportService: ProjectReportService
 	) {}
 
 	ngOnInit(): void {
@@ -114,6 +121,14 @@ export class ProjectInfoComponent implements OnInit {
 
 		if (this.project) {
 		}
+
+		this.projectReportService
+			.getReportsByUser(this.userSession.id)
+			.then((reports) => {
+				if (reports.length > 0) {
+					this.projectAlreadyReported = true;
+				}
+			});
 	}
 
 	showPaymentDialog() {
@@ -197,7 +212,7 @@ export class ProjectInfoComponent implements OnInit {
 		let validation: string = await this.aiService.validateActivity(
 			this.project.project_name,
 			this.project.project_description,
-			this.project.amount_spent,
+			this.newActivity.amount_spent,
 			this.newActivity.description
 		);
 
@@ -289,5 +304,31 @@ export class ProjectInfoComponent implements OnInit {
 		);
 		this.newComment = '';
 		this.loadUpdates();
+	}
+
+	onReportProject(): void {
+		this.projectReportService
+			.createReport(
+				this.project.project_id,
+				this.userSession.id,
+				this.reasonForReport
+			)
+			.then(() => {
+				this.messageService.add({
+					severity: 'info',
+					summary: 'Reportar proyecto',
+					detail: 'El proyecto ha sido reportado',
+					life: 3000,
+				});
+				this.onHideReportDialog();
+			});
+	}
+
+	onShowReportDialog() {
+		this.showReportDialog = true;
+	}
+
+	onHideReportDialog() {
+		this.showReportDialog = false;
 	}
 }

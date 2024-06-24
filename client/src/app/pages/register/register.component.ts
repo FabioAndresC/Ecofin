@@ -83,6 +83,10 @@ export default class RegisterComponent implements OnInit {
 			});
 	}
 
+	goToLogin(): void {
+		this.router.navigate(['/login']);
+	}
+
 	//! Using Express.js
 	// register(): void {
 	// 	console.log(this.formGroup.value);

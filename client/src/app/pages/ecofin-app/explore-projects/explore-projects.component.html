@@ -19,6 +19,7 @@
 
 	<div class="grid lg:grid-cols-3 grid-cols-2 gap-4 cursor-pointer">
 		<!-- Cards for projects -->
+		@for (project of allProjects; track $index) {
 		<div
 			*ngFor="let project of allProjects"
 			class="project-card flex flex-col min-w-52 p-4 shadow-xl rounded-lg border border-red-700 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg"
@@ -45,7 +46,9 @@
 			<div class="flex flex-col gap-2 mt-4">
 				<p-progressBar
 					[style]="{ height: '10px' }"
-					[value]="(project.amount_raised / project.required_budget) * 100"
+					[value]="
+						(project.amount_raised / project.required_budget) * 100
+					"
 					[showValue]="false"
 				></p-progressBar>
 
@@ -57,5 +60,6 @@
 				>
 			</div>
 		</div>
+		}
 	</div>
 </div>

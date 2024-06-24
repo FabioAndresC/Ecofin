@@ -28,6 +28,9 @@ import { SpeedDialModule } from 'primeng/speeddial';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { WebScrapingService } from '../../../services/web-scraping.service';
+import { SantaCruzProvinces } from '../../../singleton/santacruz-provinces';
+import { InfrastructureTypes } from '../../../singleton/infrastructure-types';
+import { ProjectRisks } from '../../../singleton/project-risks';
 
 @Component({
 	selector: 'app-manage-projects',
@@ -61,82 +64,11 @@ export class ManageProjectsComponent implements OnInit {
 
 	manageProjectId: number = 0;
 
-	santaCruzProvinces = [
-		{ name: 'Andrés Ibáñez', code: 'SC-01' },
-		{ name: 'Ángel Sandóval', code: 'SC-02' },
-		{ name: 'Chiquitos', code: 'SC-03' },
-		{ name: 'Cordillera', code: 'SC-04' },
-		{ name: 'Florida', code: 'SC-05' },
-		{ name: 'Germán Busch', code: 'SC-06' },
-		{ name: 'Guarayos', code: 'SC-07' },
-		{ name: 'Ichilo', code: 'SC-08' },
-		{ name: 'Manuel M. Caballero', code: 'SC-09' },
-		{ name: 'Ñuflo de Chávez', code: 'SC-10' },
-		{ name: 'Obispo Santiestevan', code: 'SC-11' },
-		{ name: 'Sara', code: 'SC-12' },
-		{ name: 'Vallegrande', code: 'SC-13' },
-		{ name: 'Velasco', code: 'SC-14' },
-		{ name: 'Warnes', code: 'SC-15' },
-	];
+	santaCruzProvinces = SantaCruzProvinces;
 
-	infrastructureTypes = [
-		{ name: 'Carreteras, calles y vías', code: 'INF001' },
-		{ name: 'Puentes', code: 'INF002' },
-		{
-			name: 'Transporte público, aeropuertos y vías aéreas',
-			code: 'INF003',
-		},
-		{ name: 'Abastecimiento de agua y recursos', code: 'INF004' },
-		// {
-		// 	name: 'Tratamiento de residuos sólidos y aguas servidas',
-		// 	code: 'INF005',
-		// },
-		{ name: 'Telecomunicaciones', code: 'INF006' },
-		{ name: 'Generación y transmisión de energía', code: 'INF007' },
-	];
+	infrastructureTypes = InfrastructureTypes;
 
-	riesgosProyecto = [
-		{
-			name: 'Riesgo Financiero',
-			code: 'R001',
-		},
-		{
-			name: 'Riesgo Regulatorio',
-			code: 'R002',
-		},
-		{
-			name: 'Riesgo Ambiental',
-			code: 'R003',
-		},
-		{
-			name: 'Riesgo Social',
-			code: 'R004',
-		},
-		{
-			name: 'Riesgo Tecnológico',
-			code: 'R005',
-		},
-		{
-			name: 'Riesgo Operacional',
-			code: 'R006',
-		},
-		{
-			name: 'Riesgo Político',
-			code: 'R007',
-		},
-		{
-			name: 'Riesgo de Mercado',
-			code: 'R008',
-		},
-		{
-			name: 'Riesgo de Salud y Seguridad',
-			code: 'R009',
-		},
-		{
-			name: 'Riesgo de Infraestructura',
-			code: 'R010',
-		},
-	];
+	riesgosProyecto = ProjectRisks;
 
 	metasOds: any = [
 		// { name: 'Fin de la Pobreza', code: 'ODS1' },
