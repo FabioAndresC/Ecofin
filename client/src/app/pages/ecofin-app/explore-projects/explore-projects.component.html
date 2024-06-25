@@ -21,7 +21,6 @@
 		<!-- Cards for projects -->
 		@for (project of allProjects; track $index) {
 		<div
-			*ngFor="let project of allProjects"
 			class="project-card flex flex-col min-w-52 p-4 shadow-xl rounded-lg border border-red-700 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg"
 			(click)="goToProjectDetails(project.project_id)"
 		>
