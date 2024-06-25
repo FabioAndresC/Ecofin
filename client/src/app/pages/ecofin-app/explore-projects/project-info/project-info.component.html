@@ -147,7 +147,7 @@
 						<p-progressBar
 							[style]="{ height: '10px' }"
 							[value]="
-								project.amount_raised / project.required_budget
+								(project.amount_raised / project.required_budget) * 100
 							"
 							[showValue]="false"
 						></p-progressBar>
