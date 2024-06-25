@@ -39,12 +39,6 @@ export class EcofinAppComponent implements OnInit {
 			active: false,
 			route: '/app/explore-projects',
 		},
-		{
-			name: 'Mi perfil',
-			icon: 'pi-user',
-			active: false,
-			route: '/app/my-profile',
-		},
 	];
 
 	ngOnInit(): void {

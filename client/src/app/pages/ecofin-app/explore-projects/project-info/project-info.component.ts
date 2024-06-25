@@ -245,6 +245,8 @@ export class ProjectInfoComponent implements OnInit {
 					this.newActivity.description
 				);
 			this.activities.push(newActivity);
+			this.getProjectActivities();
+			this.hideCreateActivityDialog();
 		} catch (error) {
 			console.error('Error creating activity:', error);
 		}
@@ -281,12 +283,22 @@ export class ProjectInfoComponent implements OnInit {
 	}
 
 	async createUpdate() {
-		await this.projectUpdateService.createUpdate(
-			this.project.project_id,
-			this.userSession.id,
-			this.newUpdate.title,
-			this.newUpdate.description
-		);
+		await this.projectUpdateService
+			.createUpdate(
+				this.project.project_id,
+				this.userSession.id,
+				this.newUpdate.title,
+				this.newUpdate.description
+			)
+			.then(() => {
+				this.messageService.add({
+					severity: 'success',
+					summary: 'Actualización creada',
+					detail: 'La actualización ha sido creada',
+					life: 3000,
+				});
+				this.hideCreateUpdateDialog();
+			});
 		this.newUpdate = { title: '', description: '' };
 		this.loadUpdates();
 	}
@@ -296,12 +308,21 @@ export class ProjectInfoComponent implements OnInit {
 			this.userSession.id
 		);
 
-		await this.updateCommentService.createComment(
-			updateId,
-			this.userSession.id,
-			userProfile.data[0].full_name,
-			this.newComment
-		);
+		await this.updateCommentService
+			.createComment(
+				updateId,
+				this.userSession.id,
+				userProfile.data[0].full_name,
+				this.newComment
+			)
+			.then(() => {
+				this.messageService.add({
+					severity: 'success',
+					summary: 'Comentario creado',
+					detail: 'El comentario ha sido creado',
+					life: 3000,
+				});
+			});
 		this.newComment = '';
 		this.loadUpdates();
 	}

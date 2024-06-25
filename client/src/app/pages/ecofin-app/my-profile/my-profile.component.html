@@ -1,1 +1,11 @@
-<p>my-profile works!</p>
+<div class="user-profile-container">
+	<form (ngSubmit)="onSubmit()">
+		<div>
+			<label for="fullName">Nombre Completo:</label>
+			<input id="fullName" formControlName="full_name" type="text" />
+		</div>
+		<button type="submit" [disabled]="userProfileForm.invalid">
+			Guardar
+		</button>
+	</form>
+</div>

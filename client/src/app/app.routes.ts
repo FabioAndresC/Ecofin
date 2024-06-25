@@ -7,6 +7,7 @@ import { authGuard } from './auth.guard';
 import { ExploreProjectsComponent } from './pages/ecofin-app/explore-projects/explore-projects.component';
 import { MyDonationsComponent } from './pages/ecofin-app/my-donations/my-donations.component';
 import { ProjectInfoComponent } from './pages/ecofin-app/explore-projects/project-info/project-info.component';
+import { MyProfileComponent } from './pages/ecofin-app/my-profile/my-profile.component';
 
 export const routes: Routes = [
 	{
@@ -44,7 +45,7 @@ export const routes: Routes = [
 			},
 			{
 				path: 'my-profile',
-				component: MyDonationsComponent,
+				component: MyProfileComponent,
 			},
 			{
 				path: 'project-details/:id',
