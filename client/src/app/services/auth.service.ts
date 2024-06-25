@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { apiUrls } from '../api.urls';
 import { Observable } from 'rxjs';
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -17,10 +17,14 @@ export class AuthService {
 		private router: Router,
 		private _ngZone: NgZone
 	) {
-		this.supabaseClient = createClient(
-			environment.supabaseUrl,
-			environment.supabaseKey
-		);
+		if (environment.supabaseUrl && environment.supabaseKey) {
+			this.supabaseClient = createClient(
+				environment.supabaseUrl,
+				environment.supabaseKey
+			);
+		} else {
+			throw new Error('Supabase URL or key is undefined.');
+		}
 
 		this.supabaseClient.auth.onAuthStateChange(
 			(event: any, session: any) => {

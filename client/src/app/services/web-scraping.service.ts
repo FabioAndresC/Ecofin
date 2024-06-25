@@ -4,7 +4,7 @@ import * as cheerio from 'cheerio';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 
 @Injectable({
 	providedIn: 'root',
@@ -12,10 +12,14 @@ import { environment } from '../../environments/environment.development';
 export class WebScrapingService {
 	private supabaseClient: SupabaseClient;
 	constructor(private http: HttpClient) {
-		this.supabaseClient = createClient(
-			environment.supabaseUrl,
-			environment.supabaseKey
-		);
+		if (environment.supabaseUrl && environment.supabaseKey) {
+			this.supabaseClient = createClient(
+				environment.supabaseUrl,
+				environment.supabaseKey
+			);
+		} else {
+			throw new Error('Supabase URL or key is undefined.');
+		}
 	}
 
 	// PATRON: PROTECCIÓN DE VARIACIONES
@@ -41,26 +45,22 @@ export class WebScrapingService {
 			if (data.length === 0) {
 				// If the data doesn't exist, insert every item of the metas array
 				metas.items.forEach(async (meta: string, index: number) => {
-					await this.supabaseClient
-						.from('metas_ods')
-						.insert({
-							objetivo: meta,
-							id: index + 1,
-							updated_at: new Date(),
-						});
+					await this.supabaseClient.from('metas_ods').insert({
+						objetivo: meta,
+						id: index + 1,
+						updated_at: new Date(),
+					});
 				});
 			} else {
 				// If the data exist, check if the data is the same as the metas array
 				metas.items.forEach(async (meta: string, index: number) => {
 					const metaData = data.find((m) => m.objetivo === meta);
 					if (!metaData) {
-						await this.supabaseClient
-							.from('metas_ods')
-							.insert({
-								objetivo: meta,
-								id: index + 1,
-								updated_at: new Date(),
-							});
+						await this.supabaseClient.from('metas_ods').insert({
+							objetivo: meta,
+							id: index + 1,
+							updated_at: new Date(),
+						});
 					}
 				});
 			}
