@@ -12,6 +12,8 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
 	selector: 'app-register',
@@ -23,14 +25,20 @@ import { AuthService } from '../../services/auth.service';
 		DividerModule,
 		ToggleButtonModule,
 		ReactiveFormsModule,
+		ToastModule,
 	],
+	providers: [MessageService],
 	templateUrl: './register.component.html',
 	styleUrls: ['./register.component.scss'],
 })
 export default class RegisterComponent implements OnInit {
 	formGroup: FormGroup = new FormGroup({});
 
-	constructor(private authService: AuthService, private router: Router) {}
+	constructor(
+		private authService: AuthService,
+		private router: Router,
+		private messageService: MessageService
+	) {}
 
 	ngOnInit(): void {
 		this.setForm();
@@ -77,9 +85,21 @@ export default class RegisterComponent implements OnInit {
 				console.log(data);
 				this.formGroup.reset();
 				this.router.navigate(['/login']);
+
+				this.messageService.add({
+					severity: 'success',
+					summary: 'Success',
+					detail: 'Por favor verifica tu correo electrónico para activar tu cuenta.',
+					life: 8000,
+				});
 			})
 			.catch((error: any) => {
-				console.error(error);
+				this.messageService.add({
+					severity: 'error',
+					summary: 'Error',
+					detail: error.message,
+					life: 3000,
+				});
 			});
 	}
 
